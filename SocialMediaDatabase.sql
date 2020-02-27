@@ -1,7 +1,3 @@
-CREATE TABLE "like" (
-	iid integer NOT NULL,
-	PRIMARY KEY (iid)
-);
 
 
 CREATE TABLE admin (
@@ -10,11 +6,7 @@ CREATE TABLE admin (
 	PRIMARY KEY(employee_id)
 );
 
-CREATE TABLE comment (
-	iid integer NOT NULL UNIQUE,
-	text varchar(500),	
-	PRIMARY KEY(iid)
-);
+
 
 CREATE TABLE accountuser (
 	email varchar(320) NOT NULL UNIQUE,
@@ -48,6 +40,27 @@ CREATE TABLE interaction (
 	PRIMARY KEY(iid)
 );
 
+CREATE TABLE "like" (
+	iid integer NOT NULL,
+	PRIMARY KEY (iid),
+	FOREIGN KEY (iid) REFERENCES Interaction(iid)
+);
+
+CREATE TABLE comment (
+	iid integer NOT NULL UNIQUE,
+	text varchar(500),	
+	PRIMARY KEY(iid),
+	FOREIGN KEY (iid) REFERENCES Interaction(iid)
+);
+
+CREATE TABLE share (
+	iid integer NOT NULL UNIQUE,
+    PRIMARY KEY (iid),
+    FOREIGN KEY (iid) REFERENCES Interaction(iid)
+);
+
+
+
 CREATE TABLE post (
 	pid integer NOT NULL,
 	date date NOT NULL,
@@ -75,8 +88,8 @@ CREATE TABLE interacts ( --change this
 CREATE TABLE is_friend_with ( 
 	email varchar(320) NOT NULL UNIQUE,
 	friend_email varchar(320) NOT NULL,
-	FOREIGN KEY (email) REFERENCES accountuser(email);
-	FOREIGN KEY (friend_email) REFERENCES accountuser(email);
+	FOREIGN KEY (email) REFERENCES accountuser(email),
+	FOREIGN KEY (friend_email) REFERENCES accountuser(email)
 );
 
 CREATE TABLE makes ( --change this
@@ -126,7 +139,35 @@ CREATE TABLE participates (
 );
 
 
-CREATE TABLE share (
-	iid integer NOT NULL UNIQUE,
-    PRIMARY KEY (iid)
+
+
+CREATE TABLE advertisement (
+	pid integer NOT NULL,
+	date date NOT NULL,
+	time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	text varchar(200),
+	image varchar(20),
+	email varchar(320),
+	page_id integer,
+	price integer,
+    PRIMARY KEY(pid),
+    FOREIGN KEY (email) REFERENCES accountuser(email),
+    FOREIGN KEY (page_id) REFERENCES page(page_id),
+    FOREIGN KEY (pid) REFERENCES post(pid)
+    
+);
+
+CREATE TABLE user_story (
+	pid integer NOT NULL,
+	date date NOT NULL,
+	time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	text varchar(200),
+	image varchar(20),
+	email varchar(320),
+	page_id integer,
+	expiration_date date,
+    PRIMARY KEY(pid),
+    FOREIGN KEY (email) REFERENCES accountuser(email),
+    FOREIGN KEY (page_id) REFERENCES page(page_id),
+    FOREIGN KEY (pid) REFERENCES post(pid)
 );
