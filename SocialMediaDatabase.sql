@@ -72,8 +72,11 @@ CREATE TABLE interacts ( --change this
 );
 
 
-CREATE TABLE is_friend_with ( --change this
-	
+CREATE TABLE is_friend_with ( 
+	email varchar(320) NOT NULL UNIQUE,
+	friend_email varchar(320) NOT NULL,
+	FOREIGN KEY (email) REFERENCES accountuser(email);
+	FOREIGN KEY (friend_email) REFERENCES accountuser(email);
 );
 
 CREATE TABLE makes ( --change this
