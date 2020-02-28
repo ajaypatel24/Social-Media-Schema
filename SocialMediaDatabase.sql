@@ -141,30 +141,14 @@ CREATE TABLE participates (
 
 CREATE TABLE advertisement (
 	pid integer NOT NULL,
-	date date NOT NULL,
-	time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-	text varchar(200),
-	image varchar(20),
-	email varchar(320),
-	page_id integer,
 	price integer,
     PRIMARY KEY(pid),
-    FOREIGN KEY (email) REFERENCES accountuser(email),
-    FOREIGN KEY (page_id) REFERENCES page(page_id),
     FOREIGN KEY (pid) REFERENCES post(pid)    
 );
 
 CREATE TABLE user_story (
 	pid integer NOT NULL,
-	date date NOT NULL,
-	time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-	text varchar(200),
-	image varchar(20),
-	email varchar(320),
-	page_id integer,
 	expiration_date date,
     PRIMARY KEY(pid),
-    FOREIGN KEY (email) REFERENCES accountuser(email),
-    FOREIGN KEY (page_id) REFERENCES page(page_id),
     FOREIGN KEY (pid) REFERENCES post(pid)
 );
