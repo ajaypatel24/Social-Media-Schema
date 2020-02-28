@@ -24,7 +24,7 @@ CREATE TABLE event (
 	time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	location varchar(30),
 	organizer varchar(320) ,
-	page_id integer ,
+	page_id integer,
 	PRIMARY KEY(eid),
     FOREIGN KEY (page_id) REFERENCES page(page_id),
     FOREIGN KEY (organizer) REFERENCES accountuser(email)
@@ -53,8 +53,7 @@ CREATE TABLE interaction (
 	time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	FOREIGN KEY (email) REFERENCES accountuser(email),
 	FOREIGN KEY (page_id) REFERENCES page(page_id),
-	FOREIGN KEY (pid) REFERENCES post(pid),
-	FOREIGN KEY (date, time) REFERENCES Notification
+	FOREIGN KEY (pid) REFERENCES post(pid)
 );
 
 CREATE TABLE "like" (
@@ -111,7 +110,7 @@ CREATE TABLE manages (
 
 CREATE TABLE monitors (
 	employee_id integer NOT NULL,
-	pid integer NOT NUL,
+	pid integer NOT NULL,
 	PRIMARY KEY(employee_id,pid),
     FOREIGN KEY (employee_id) REFERENCES admin(employee_id),
     FOREIGN KEY (pid) REFERENCES post(pid)
@@ -122,7 +121,7 @@ CREATE TABLE notification (
 	time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	type varchar(20),
 	iid integer,
-	PRIMARY KEY (date,time),
+	PRIMARY KEY (date, time),
 	FOREIGN KEY (iid) REFERENCES Interaction(iid)
 );
 
