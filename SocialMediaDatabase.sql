@@ -21,7 +21,7 @@ CREATE TABLE page (
 CREATE TABLE event (
 	eid integer NOT NULL UNIQUE,
 	date date NOT NULL,
-	time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	time TIME NOT NULL,
 	location varchar(30),
 	organizer varchar(320) ,
 	page_id integer,
@@ -33,7 +33,7 @@ CREATE TABLE event (
 CREATE TABLE post (
 	pid integer NOT NULL,
 	date date NOT NULL,
-	time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	time TIME NOT NULL,
 	text varchar(200),
 	image varchar(20),
 	email varchar(320),
@@ -50,7 +50,7 @@ CREATE TABLE interaction (
 	email varchar(320),
 	PRIMARY KEY(iid),
 	date date NOT NULL,
-	time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	time TIME NOT NULL,
 	FOREIGN KEY (email) REFERENCES accountuser(email),
 	FOREIGN KEY (page_id) REFERENCES page(page_id),
 	FOREIGN KEY (pid) REFERENCES post(pid)
@@ -77,7 +77,7 @@ CREATE TABLE share (
 
 CREATE TABLE interacts (
 	pid integer NOT NULL UNIQUE,
-	email varchar(320) NOT NULL UNIQUE,
+	email varchar(320) NOT NULL,
 	PRIMARY KEY (pid,email),
     FOREIGN KEY (pid) REFERENCES post(pid),
     FOREIGN KEY (email) REFERENCES accountuser(email)
@@ -118,7 +118,7 @@ CREATE TABLE monitors (
 
 CREATE TABLE notification (
 	date date NOT NULL,
-	time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	time TIME NOT NULL,
 	type varchar(20),
 	iid integer,
 	PRIMARY KEY (date, time),
