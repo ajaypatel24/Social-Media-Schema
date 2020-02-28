@@ -1,12 +1,12 @@
-Functional requirements
-The social network should allow users to make and accept friendship requests. 
-A user can have at most 5000 friends.
-A page can have as many followers as there are users in a network. 
-The social network should allow users to create posts with a maximum of 40 000 characters. 
-The social network should allow pages and users to modify or delete posts they’ve made.
-The social network should notify the user when an interaction happens with one of their posts. 
-The social network should allow users to create events and invite people they are friends with to it. 
-The social network should allow users to create pages of which they are automatically administrators.
-A user can follow an unlimited number of pages. 
-System administrators can modify or delete any posts made by any user except other social administrators.
+Missing Functional requirements from Project 1
+1. The social network should allow users to make and accept friendship requests. 
+2. A user can have at most 5000 friends.
+3. A page can have as many followers as there are users in a network. 
+4. The social network should allow users to create posts with a maximum of 40 000 characters. 
+5. The social network should allow pages and users to modify or delete posts they’ve made.
+6. The social network should notify the user when an interaction happens with one of their posts. 
+7. The social network should allow users to create events and invite people they are friends with to it. 
+8. The social network should allow users to create pages of which they are automatically administrators.
+9. A user can follow an unlimited number of pages. 
+10. System administrators can modify or delete any posts made by any user except other social administrators.
 
