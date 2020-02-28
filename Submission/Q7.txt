@@ -19,11 +19,12 @@ CREATE VIEW
 
 SELECT * FROM profitable_ads;
 
- pid | price 
------+-------
- 110 |    25
-  66 |    38
-(2 rows)
+ pid | price  
+-----+--------
+  22 | 143.56
+  44 |  90.43
+  66 | 200.50
+(3 rows)
 
 SELECT * FROM page_managers LIMIT 5;
 
