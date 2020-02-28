@@ -1,0 +1,37 @@
+--This view gets the list of all advertisements that generate over the average amount of money that 
+--advertisements in the table generate
+CREATE VIEW profitable_ads AS
+SELECT *
+FROM advertisement
+WHERE price > (SELECT AVG(price) from advertisement);
+
+CREATE VIEW
+
+--This view gets the first_name of all the users and the id number of the page they manage 
+
+CREATE VIEW page_managers AS
+SELECT A2.first_name, A1.page_id
+FROM accountuser A2 INNER JOIN manages A1
+ON A2.email = A1.email
+ORDER BY A1.page_id DESC;
+
+CREATE VIEW
+
+SELECT * FROM profitable_ads;
+
+ pid | price 
+-----+-------
+ 110 |    25
+  66 |    38
+(2 rows)
+
+SELECT * FROM page_managers LIMIT 5;
+
+ first_name | page_id 
+------------+---------
+ Kiara      |       6
+ Timmy      |       5
+ Jamie-Lee  |       5
+ Kit        |       4
+ Kobie      |       3
+(5 rows)
