@@ -1,3 +1,6 @@
+SELECT * FROM accountuser WHERE accountuser.email IN (SELECT organizer FROM Event); 
+--The above script returns all the users that have organized at least one event
+
        email        | first_name | last_name |             password             
 --------------------+------------+-----------+----------------------------------
  RFox@live.com      | Rory       | Fox       | 08a70d30070bf624dacbd4f94ab11490
@@ -45,6 +48,11 @@ Foreign-key constraints:
 Referenced by:
     TABLE "participates" CONSTRAINT "participates_eid_fkey" FOREIGN KEY (eid) REFERENCES event(eid)
 
+
+SELECT count(*) FROM (Interaction NATURAL JOIN "like") WHERE email = 'BigHoff@gmx.com'; 
+--The above script returns the total number of Like interactions associated with the user 
+--that has the email address 'BigHoof@gmx.com' 
+
  count 
 -------
      8
@@ -79,6 +87,12 @@ Indexes:
     "like_pkey" PRIMARY KEY, btree (iid)
 Foreign-key constraints:
     "like_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+
+
+SELECT email, text, expiration_date FROM (user_story NATURAL JOIN Post) WHERE expiration_date > '2019-06-05' ORDER BY expiration_date ASC; 
+--The above script returns all the user_story posts and the users associated with them that expired after
+--the date 2019-06-05
+
 
           email           |                                                              text                                                               | expiration_date 
 --------------------------+---------------------------------------------------------------------------------------------------------------------------------+-----------------
@@ -125,6 +139,11 @@ Referenced by:
     TABLE "monitors" CONSTRAINT "monitors_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
     TABLE "user_story" CONSTRAINT "user_story_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
 
+
+SELECT AVG(time),MAX(type) FROM notification WHERE date < '2019-10-12'; 
+--The above script returns the average time of day of notifications and the most frequent type of
+--notification before the date 2019-10-12
+
        avg       |  max  
 -----------------+-------
  09:55:40.785714 | Share
@@ -141,6 +160,11 @@ Indexes:
     "notification_pkey" PRIMARY KEY, btree (date, "time")
 Foreign-key constraints:
     "notification_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+
+
+SELECT (SELECT count(*) FROM Admin WHERE access_rights <> 'all') - (SELECT count(*) FROM Admin WHERE access_rights = 'all') AS Difference; 
+--The above script returns the number of system administrators that do not have maximum access rights when
+--moderating the social network
 
  difference 
 ------------
