@@ -4,5 +4,5 @@ is_friend_with
 time datatype
 3. Assume timezone is EST in the database
 
-4. Like comment and subscribe cannot share any members (have same iid in both) (pretty sure this can be enforced with SQL)
+4. Like comment and share cannot share any members (have same iid in both) (pretty sure this can be enforced with SQL)
 5. Advertisement and Story cannot share any members (have same iid in both) (this can also be enforced)
