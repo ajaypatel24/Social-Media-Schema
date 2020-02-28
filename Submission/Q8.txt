@@ -2,7 +2,7 @@
 
 
 ALTER TABLE notification ADD CHECK (type='Like' OR type='Comment' OR type='Share');
-ALTER TABLE advertisement ADD CHECK (price <= 20);
+ALTER TABLE advertisement ADD CHECK (price > 10);
 
 
 CREATE TABLE notification (
