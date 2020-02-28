@@ -162,14 +162,27 @@ Foreign-key constraints:
     "notification_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
 
 
-SELECT (SELECT count(*) FROM Admin WHERE access_rights <> 'all') - (SELECT count(*) FROM Admin WHERE access_rights = 'all') AS Difference; 
---The above script returns the number of system administrators that do not have maximum access rights when
---moderating the social network
+SELECT employee_id FROM (monitors NATURAL JOIN admin) WHERE admin.access_rights = 'all' GROUP BY employee_id HAVING count(*) >= 3;
+--The above script returns the system administrator employee_ids with maximum access rights that monitor 3 or more pages
 
- difference 
-------------
-         48
-(1 row)
+ employee_id 
+-------------
+          67
+          92
+         116
+         145
+(4 rows)
+
+              Table "cs421g38.monitors"
+   Column    |  Type   | Modifiers 
+-------------+---------+-----------
+ employee_id | integer | not null
+ pid         | integer | not null
+Indexes:
+    "monitors_pkey" PRIMARY KEY, btree (employee_id, pid)
+Foreign-key constraints:
+    "monitors_employee_id_fkey" FOREIGN KEY (employee_id) REFERENCES admin(employee_id)
+    "monitors_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
 
               Table "cs421g38.admin"
     Column     |         Type          | Modifiers 

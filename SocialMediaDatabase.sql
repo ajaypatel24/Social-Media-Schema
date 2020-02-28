@@ -143,7 +143,7 @@ CREATE TABLE participates (
 
 CREATE TABLE advertisement (
 	pid integer NOT NULL,
-	price integer,
+	price decimal(7,2),
     PRIMARY KEY(pid),
     FOREIGN KEY (pid) REFERENCES post(pid)    
 );

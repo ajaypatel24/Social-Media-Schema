@@ -523,12 +523,12 @@ INSERT INTO cs421g38.post (pid, date, "time", text, image, email, page_id) VALUE
 INSERT INTO cs421g38.post (pid, date, "time", text, image, email, page_id) VALUES (142, '2019-06-23', '23:45:01', 'faucibus cursus urna ut tellus nulla ut erat id mauris vulputate elementum nullam', NULL, 'KingMaddox@aol.com', 6);
 
 
-INSERT INTO cs421g38.advertisement (pid, price) VALUES (110, 15);
-INSERT INTO cs421g38.advertisement (pid, price) VALUES (22,  15);
-INSERT INTO cs421g38.advertisement (pid, price) VALUES (44,  15);
-INSERT INTO cs421g38.advertisement (pid, price) VALUES (88, 15);
-INSERT INTO cs421g38.advertisement (pid, price) VALUES (66, 15);
-INSERT INTO cs421g38.advertisement (pid, price) VALUES (132, 15);
+INSERT INTO cs421g38.advertisement (pid, price) VALUES (110, 15.99);
+INSERT INTO cs421g38.advertisement (pid, price) VALUES (22,  143.56);
+INSERT INTO cs421g38.advertisement (pid, price) VALUES (44,  90.43);
+INSERT INTO cs421g38.advertisement (pid, price) VALUES (88, 34.50);
+INSERT INTO cs421g38.advertisement (pid, price) VALUES (66, 200.50);
+INSERT INTO cs421g38.advertisement (pid, price) VALUES (132, 43.99);
 
 INSERT INTO cs421g38.user_story (pid, expiration_date) VALUES (14, '2020-02-14');
 INSERT INTO cs421g38.user_story (pid, expiration_date) VALUES (28,  '2020-02-14');

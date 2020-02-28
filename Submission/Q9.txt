@@ -2,3 +2,8 @@ Automated data generation & Real data sets:
 Data for the accountuser, comment and event tables were generated automatically using https://www.generatedata.com/ and https://mockaroo.com/
 -to use them, a table structure was specified along with categories for each column. The categories generated realistic data sets for the tables
 which modeled real world names. When needed, random dates and time were also generated.
+
+In the webserver, several scripts were created to facilitate the process of testing
+delete.sql allowed us to quickly drop all tables
+create.sql allowed us to quickly create all tables
+data.sql allowed us to repopulate all our tables as it contained the necessary import statements to do so
