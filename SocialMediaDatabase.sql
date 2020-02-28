@@ -49,9 +49,12 @@ CREATE TABLE interaction (
 	pid integer,
 	email varchar(320),
 	PRIMARY KEY(iid),
+	date date NOT NULL,
+	time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	FOREIGN KEY (email) REFERENCES accountuser(email),
 	FOREIGN KEY (page_id) REFERENCES page(page_id),
-	FOREIGN KEY (pid) REFERENCES post(pid)
+	FOREIGN KEY (pid) REFERENCES post(pid),
+	FOREIGN KEY (date, time) REFERENCES Notification
 );
 
 CREATE TABLE "like" (
@@ -99,16 +102,16 @@ CREATE TABLE makes (
 );
 
 CREATE TABLE manages (
-	page_id integer NOT NULL , 
-	email varchar(320) NOT NULL ,
+	page_id integer NOT NULL, 
+	email varchar(320) NOT NULL,
 	PRIMARY KEY(page_id, email),
     FOREIGN KEY (page_id) REFERENCES Page(page_id),
     FOREIGN KEY (email) REFERENCES accountuser(email)
 );
 
 CREATE TABLE monitors (
-	employee_id integer NOT NULL ,
-	pid integer NOT NULL ,
+	employee_id integer NOT NULL,
+	pid integer NOT NUL,
 	PRIMARY KEY(employee_id,pid),
     FOREIGN KEY (employee_id) REFERENCES admin(employee_id),
     FOREIGN KEY (pid) REFERENCES post(pid)
@@ -124,16 +127,16 @@ CREATE TABLE notification (
 );
 
 CREATE TABLE partakes (
-	page_id integer NOT NULL ,
-	email varchar(320) NOT NULL ,
+	page_id integer NOT NULL,
+	email varchar(320) NOT NULL,
 	PRIMARY KEY (page_id, email),
     FOREIGN KEY (page_id) REFERENCES Page(page_id),
     FOREIGN KEY (email) REFERENCES accountuser(email)
 );
 
 CREATE TABLE participates (
-	eid integer NOT NULL ,
-	email varchar(320) NOT NULL ,
+	eid integer NOT NULL,
+	email varchar(320) NOT NULL,
 	PRIMARY KEY (eid,email),
     FOREIGN KEY (eid) REFERENCES event(eid),
     FOREIGN KEY (email) REFERENCES accountuser(email)
