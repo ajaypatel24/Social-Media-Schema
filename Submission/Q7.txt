@@ -1,21 +1,21 @@
 --This view gets the list of all advertisements that generate over the average amount of money that 
 --advertisements in the table generate
-CREATE vIEW profitable_ads AS
+CREATE VIEW profitable_ads AS
 SELECT *
 FROM advertisement
 WHERE price > (SELECT AVG(price) from advertisement);
 
-CREATE vIEW
+CREATE VIEW
 
 --This view gets the first_name of all the users and the id number of the page they manage 
 
-CREATE vIEW page_managers AS
+CREATE VIEW page_managers AS
 SELECT A2.first_name, A1.page_id
 FROM accountuser A2 INNER JOIN manages A1
 ON A2.email = A1.email
 ORDER BY A1.page_id DESC;
 
-CREATE vIEW
+CREATE VIEW
 
 SELECT * FROM profitable_ads;
 
