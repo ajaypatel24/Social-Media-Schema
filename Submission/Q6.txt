@@ -1,0 +1,222 @@
+----------------Update 1----------------
+This update statement increases the price of all ads posted after june 1st 2019 by 10%. You can see the results below.
+
+SELECT *
+FROM advertisement
+INNER JOIN post
+ON advertisement.pid = post.pid
+WHERE date > '2019-06-01';
+
+
+ pid | price  | pid |    date    |   time   |                                                     text                                                     | image |             email              | page_id
+-----+--------+-----+------------+----------+--------------------------------------------------------------------------------------------------------------+-------+--------------------------------+---------
+ 110 |  18.47 | 110 | 2019-06-07 | 08:20:51 | duis aliquam convallis nunc proin at turpis a pede posuere nonummy                                           |       | CobyBax8@gmail.com             |       5
+  22 | 165.81 |  22 | 2020-01-01 | 19:25:51 | interdum in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae duis |       | GordonHaywardBrother@gmail.com |       1
+  44 | 104.45 |  44 | 2019-10-15 | 15:13:52 | pede morbi porttitor                                                                                         |       | Anish1994@gmail.com            |       2
+  88 |  39.85 |  88 | 2019-06-09 | 01:04:33 | cras mi pede malesuada in                                                                                    |       | Mamba24@zoho.com               |       4
+(4 rows)
+
+
+UPDATE advertisement
+SET price=price*1.10
+FROM post
+WHERE advertisement.pid = post.pid AND post.date > '2019-06-01';
+UPDATE 4
+
+
+SELECT *
+FROM advertisement
+INNER JOIN post
+ON advertisement.pid = post.pid
+WHERE date > '2019-06-01';
+ pid | price  | pid |    date    |   time   |                                                     text                                                     | image |             email              | page_id
+-----+--------+-----+------------+----------+--------------------------------------------------------------------------------------------------------------+-------+--------------------------------+---------
+ 110 |  20.32 | 110 | 2019-06-07 | 08:20:51 | duis aliquam convallis nunc proin at turpis a pede posuere nonummy                                           |       | CobyBax8@gmail.com             |       5
+  22 | 182.39 |  22 | 2020-01-01 | 19:25:51 | interdum in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae duis |       | GordonHaywardBrother@gmail.com |       1
+  44 | 114.90 |  44 | 2019-10-15 | 15:13:52 | pede morbi porttitor                                                                                         |       | Anish1994@gmail.com            |       2
+  88 |  43.84 |  88 | 2019-06-09 | 01:04:33 | cras mi pede malesuada in                                                                                    |       | Mamba24@zoho.com               |       4
+(4 rows)
+
+
+
+----------------Update 2----------------
+This update is meant to clear posts from a user that got banned from the platform. We didn't use delete here because we still wanted to keep a record of the posts.
+
+
+Here are some users of our social media platform:
+
+               email                | first_name |  last_name  |             password
+------------------------------------+------------+-------------+----------------------------------
+ BigHoff@gmx.com                    | Kaiden     | Hoffman     | e2d2bf7498db16ec73fc234cac126abf
+ TrevySpa@gmx.com                   | Kaia       | Trevino     | 694b32a9a2f5189c490b80c0337bb246
+ KirbyPuff@aol.com                  | Kirby      | Mercado     | abb3e60f89842cb1cc7b0dabe4125351
+ KingMaddox@aol.com                 | Kinga      | Maddox      | 83b53a15912fff073c11c79ee0d4c696
+ Mamba24@zoho.com                   | Kobie      | Calderon    | 8f66d42c90b40543b40c9f7c760b9169
+ MarthMainZane@gmx.com              | Zane       | Humphries   | 9442b44e03891fecd4e249b9fb2be7eb
+ LorenaSheridan11@gmx.com           | Lorena     | Sheridan    | 83b53a15912fff073c11c79ee0d4c696
+ KiyaK@live.com                     | Kiya       | Grimes      | 83b53a15912fff073c11c79ee0d4c696
+
+we choose a user at random, lets say:
+ KirbyPuff@aol.com                  | Kirby      | Mercado     | abb3e60f89842cb1cc7b0dabe4125351
+
+now we check the posts from that user:
+
+SELECT * FROM post WHERE email = 'KirbyPuff@aol.com';
+ pid |    date    |   time   |                                            text                                             | image |       email       | page_id |       email       | first_name | last_name |             password   
+-----+------------+----------+---------------------------------------------------------------------------------------------+-------+-------------------+---------+-------------------+------------+-----------+----------------------------------
+  32 | 2019-08-15 | 05:09:08 | at turpis donec posuere metus vitae ipsum aliquam non mauris morbi non lectus aliquam       |       | KirbyPuff@aol.com |       2 | KirbyPuff@aol.com | Kirby      | Mercado   | abb3e60f89842cb1cc7b0dabe4125351
+  64 | 2019-10-19 | 17:42:21 | lacinia eget tincidunt eget tempus vel pede                                                 |       | KirbyPuff@aol.com |       3 | KirbyPuff@aol.com | Kirby      | Mercado   | abb3e60f89842cb1cc7b0dabe4125351
+ 128 | 2020-01-20 | 08:43:44 | at velit eu est congue elementum in hac habitasse platea dictumst morbi vestibulum velit id |       | KirbyPuff@aol.com |       6 | KirbyPuff@aol.com | Kirby      | Mercado   | abb3e60f89842cb1cc7b0dabe4125351
+  96 | 2019-07-20 | 06:57:02 | risus dapibus augue                                                                         |       | KirbyPuff@aol.com |       4 | KirbyPuff@aol.com | Kirby      | Mercado   | abb3e60f89842cb1cc7b0dabe4125351
+(4 rows)
+
+To clear the posts, we run:
+
+UPDATE post
+SET text = 'This post violates the guidelines and has been removed.',
+image = NULL
+WHERE email = 'KirbyPuff@aol.com';
+UPDATE 4
+
+And now we have:
+
+SELECT * FROM post WHERE email = 'KirbyPuff@aol.com';
+ pid |    date    |   time   |                          text                           | image |       email       | page_id
+-----+------------+----------+---------------------------------------------------------+-------+-------------------+---------
+  32 | 2019-08-15 | 05:09:08 | This post violates the guidelines and has been removed. |       | KirbyPuff@aol.com |       2
+  64 | 2019-10-19 | 17:42:21 | This post violates the guidelines and has been removed. |       | KirbyPuff@aol.com |       3
+ 128 | 2020-01-20 | 08:43:44 | This post violates the guidelines and has been removed. |       | KirbyPuff@aol.com |       6
+  96 | 2019-07-20 | 06:57:02 | This post violates the guidelines and has been removed. |       | KirbyPuff@aol.com |       4
+(4 rows)
+
+----------------Update 3----------------
+Let's say a few system admins got promoted and they get higher access rights. This way they are able to monitor more posts.
+
+Let's say the following employees are getting a promotion:
+
+SELECT * FROM admin WHERE employee_id=1 OR employee_id=2 OR employee_id=28 OR employee_id=33;
+ employee_id | access_rights
+-------------+---------------
+           1 | private
+           2 | public
+          28 | private
+          33 | public
+
+We want to update access rights for these employees where public -> private and private -> all. So we run the following:
+
+UPDATE admin
+SET access_rights = REPLACE(access_rights, 'private', 'all')
+WHERE employee_id=1 OR employee_id=2 OR employee_id=28 OR employee_id=33;
+UPDATE 4
+SELECT * FROM admin WHERE employee_id=1 OR employee_id=2 OR employee_id=28 OR employee_id=33;
+ employee_id | access_rights
+-------------+---------------
+           1 | all
+          28 | all
+           2 | public
+          33 | public
+(4 rows)
+
+And then we run:
+
+UPDATE admin
+SET access_rights = REPLACE(access_rights, 'public', 'private')
+WHERE employee_id=1 OR employee_id=2 OR employee_id=28 OR employee_id=33;
+UPDATE 4
+SELECT * FROM admin WHERE employee_id=1 OR employee_id=2 OR employee_id=28 OR employee_id=33;
+ employee_id | access_rights
+-------------+---------------
+           1 | all
+          28 | all
+           2 | private
+          33 | private
+(4 rows)
+
+----------------Update 4----------------
+Here we want to update the posts made by a certain page. If a page wants to add a signature to their posts like "Follow us on instagram! @instagram", we can use this update.
+
+First we get all the posts on the Knitting page:
+
+SELECT *
+FROM post
+INNER JOIN page
+ON post.page_id = page.page_id
+AND page.page_name = 'Knitting';
+
+ pid |    date    |   time   |                                                              text                                                               | image |             email              | page_id | page_id | page_name
+-----+------------+----------+---------------------------------------------------------------------------------------------------------------------------------+-------+--------------------------------+---------+---------+-----------
+  91 | 2019-04-29 | 13:37:31 | et ultrices posuere cubilia curae donec pharetra magna vestibulum aliquet ultrices erat tortor sollicitudin mi sit amet         |       | BigHoff@gmx.com                |       4 |       4 | Knitting
+  85 | 2019-06-06 | 00:28:18 | montes nascetur ridiculus mus etiam vel augue vestibulum rutrum rutrum neque                                                    |       | CobyBax8@gmail.com             |       4 |       4 | Knitting
+  95 | 2019-03-19 | 23:39:57 | at nunc commodo placerat praesent blandit nam nulla integer pede                                                                |       | CobyBax8@gmail.com             |       4 |       4 | Knitting
+ 100 | 2019-03-17 | 22:23:53 | eget congue eget semper rutrum nulla nunc purus phasellus                                                                       |       | RFox@live.com                  |       4 |       4 | Knitting
+  99 | 2019-11-21 | 05:05:47 | vitae quam suspendisse potenti nullam porttitor lacus at turpis donec posuere metus vitae ipsum aliquam non mauris              |       | GovChristie@gmail.com          |       4 |       4 | Knitting
+  80 | 2019-10-10 | 19:00:28 | tortor duis mattis egestas metus                                                                                                |       | Mamba24@zoho.com               |       4 |       4 | Knitting
+  88 | 2019-06-09 | 01:04:33 | cras mi pede malesuada in                                                                                                       |       | Mamba24@zoho.com               |       4 |       4 | Knitting
+  81 | 2019-07-09 | 14:12:48 | id ligula suspendisse ornare consequat lectus in est risus auctor                                                               |       | Libby.Rowland@mail.mcgill.ca   |       4 |       4 | Knitting
+  78 | 2019-09-19 | 02:57:27 | venenatis                                                                                                                       |       | BigHoff@gmx.com                |       4 |       4 | Knitting
+  77 | 2020-02-09 | 06:31:04 | augue a suscipit nulla                                                                                                          |       | JLG@live.com                   |       4 |       4 | Knitting
+  76 | 2019-08-01 | 07:40:54 | nunc                                                                                                                            |       | Anish1994@gmail.com            |       4 |       4 | Knitting
+  92 | 2019-06-15 | 02:03:54 | vel lectus in quam fringilla rhoncus mauris enim leo rhoncus sed vestibulum sit amet cursus id turpis integer aliquet           |       | Anish1994@gmail.com            |       4 |       4 | Knitting
+  87 | 2019-08-06 | 12:08:38 | id nisl venenatis lacinia aenean                                                                                                |       | GovChristie@gmail.com          |       4 |       4 | Knitting
+  93 | 2019-03-22 | 14:10:58 | elit ac nulla                                                                                                                   |       | GovChristie@gmail.com          |       4 |       4 | Knitting
+  82 | 2019-03-11 | 19:53:50 | tellus semper interdum mauris ullamcorper purus sit                                                                             |       | KingMaddox@aol.com             |       4 |       4 | Knitting
+  86 | 2019-12-30 | 14:28:19 | tempor convallis nulla neque libero convallis eget eleifend luctus ultricies eu nibh quisque id justo sit amet sapien dignissim |       | KingMaddox@aol.com             |       4 |       4 | Knitting
+  79 | 2019-07-30 | 07:09:33 | odio odio elementum eu interdum eu tincidunt in leo                                                                             |       | Che.Blankenship@mail.mcgill.ca |       4 |       4 | Knitting
+  83 | 2020-02-04 | 20:33:25 | in lectus pellentesque at nulla suspendisse potenti cras in                                                                     |       | Che.Blankenship@mail.mcgill.ca |       4 |       4 | Knitting
+  89 | 2019-03-23 | 21:47:38 | orci                                                                                                                            |       | Che.Blankenship@mail.mcgill.ca |       4 |       4 | Knitting
+  97 | 2019-05-03 | 12:03:11 | etiam faucibus cursus urna                                                                                                      |       | Che.Blankenship@mail.mcgill.ca |       4 |       4 | Knitting
+  90 | 2019-06-01 | 08:05:10 | nec molestie sed justo pellentesque viverra pede ac diam cras pellentesque volutpat dui maecenas tristique est et               |       | Sherry33@zoho.com              |       4 |       4 | Knitting
+  98 | 2019-09-16 | 07:52:46 | lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien                            |       | LorenaSheridan11@gmx.com       |       4 |       4 | Knitting
+  84 | 2019-10-14 | 00:25:29 | mi                                                                                                                              |       | LorenaSheridan11@gmx.com       |       4 |       4 | Knitting
+  94 | 2019-04-06 | 05:02:17 | rutrum nulla tellus in sagittis dui vel nisl                                                                                    |       | KingMaddox@aol.com             |       4 |       4 | Knitting
+  96 | 2019-07-20 | 06:57:02 | This post violates the guidelines and has been removed.                                                                         |       | KirbyPuff@aol.com              |       4 |       4 | Knitting
+(25 rows)
+
+Then we use the following update:
+
+UPDATE post
+SET text = text || ' Follow Knitting on instagram, @KnittingOnSocialMedia !'
+FROM page
+WHERE post.page_id = page.page_id
+AND page.page_name = 'Knitting';
+UPDATE 25
+
+Which gives us:
+
+SELECT *
+FROM post
+INNER JOIN page
+ON post.page_id = page.page_id
+AND page.page_name = 'Knitting';
+
+ pid |    date    |   time   |                                                                                          text                                                                                          | image |             email              | page_id | page_id | page_name
+-----+------------+----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------+--------------------------------+---------+---------+-----------
+  80 | 2019-10-10 | 19:00:28 | tortor duis mattis egestas metus Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                                                |       | Mamba24@zoho.com               |       4 |       4 | Knitting
+  78 | 2019-09-19 | 02:57:27 | venenatis Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                                                                       |       | BigHoff@gmx.com                |       4 |       4 | Knitting
+  91 | 2019-04-29 | 13:37:31 | et ultrices posuere cubilia curae donec pharetra magna vestibulum aliquet ultrices erat tortor sollicitudin mi sit amet Follow Knitting on instagram, @KnittingOnSocialMedia !         |       | BigHoff@gmx.com                |       4 |       4 | Knitting
+  85 | 2019-06-06 | 00:28:18 | montes nascetur ridiculus mus etiam vel augue vestibulum rutrum rutrum neque Follow Knitting on instagram, @KnittingOnSocialMedia !                                                    |       | CobyBax8@gmail.com             |       4 |       4 | Knitting
+  95 | 2019-03-19 | 23:39:57 | at nunc commodo placerat praesent blandit nam nulla integer pede Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                |       | CobyBax8@gmail.com             |       4 |       4 | Knitting
+ 100 | 2019-03-17 | 22:23:53 | eget congue eget semper rutrum nulla nunc purus phasellus Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                       |       | RFox@live.com                  |       4 |       4 | Knitting
+  99 | 2019-11-21 | 05:05:47 | vitae quam suspendisse potenti nullam porttitor lacus at turpis donec posuere metus vitae ipsum aliquam non mauris Follow Knitting on instagram, @KnittingOnSocialMedia !              |       | GovChristie@gmail.com          |       4 |       4 | Knitting
+  88 | 2019-06-09 | 01:04:33 | cras mi pede malesuada in Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                                                       |       | Mamba24@zoho.com               |       4 |       4 | Knitting
+  81 | 2019-07-09 | 14:12:48 | id ligula suspendisse ornare consequat lectus in est risus auctor Follow Knitting on instagram, @KnittingOnSocialMedia !                                                               |       | Libby.Rowland@mail.mcgill.ca   |       4 |       4 | Knitting
+  77 | 2020-02-09 | 06:31:04 | augue a suscipit nulla Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                                                          |       | JLG@live.com                   |       4 |       4 | Knitting
+  76 | 2019-08-01 | 07:40:54 | nunc Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                                                                            |       | Anish1994@gmail.com            |       4 |       4 | Knitting
+  92 | 2019-06-15 | 02:03:54 | vel lectus in quam fringilla rhoncus mauris enim leo rhoncus sed vestibulum sit amet cursus id turpis integer aliquet Follow Knitting on instagram, @KnittingOnSocialMedia !           |       | Anish1994@gmail.com            |       4 |       4 | Knitting
+  87 | 2019-08-06 | 12:08:38 | id nisl venenatis lacinia aenean Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                                                |       | GovChristie@gmail.com          |       4 |       4 | Knitting
+  93 | 2019-03-22 | 14:10:58 | elit ac nulla Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                                                                   |       | GovChristie@gmail.com          |       4 |       4 | Knitting
+  82 | 2019-03-11 | 19:53:50 | tellus semper interdum mauris ullamcorper purus sit Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                             |       | KingMaddox@aol.com             |       4 |       4 | Knitting
+  86 | 2019-12-30 | 14:28:19 | tempor convallis nulla neque libero convallis eget eleifend luctus ultricies eu nibh quisque id justo sit amet sapien dignissim Follow Knitting on instagram, @KnittingOnSocialMedia ! |       | KingMaddox@aol.com             |       4 |       4 | Knitting
+  79 | 2019-07-30 | 07:09:33 | odio odio elementum eu interdum eu tincidunt in leo Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                             |       | Che.Blankenship@mail.mcgill.ca |       4 |       4 | Knitting
+  83 | 2020-02-04 | 20:33:25 | in lectus pellentesque at nulla suspendisse potenti cras in Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                     |       | Che.Blankenship@mail.mcgill.ca |       4 |       4 | Knitting
+  89 | 2019-03-23 | 21:47:38 | orci Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                                                                            |       | Che.Blankenship@mail.mcgill.ca |       4 |       4 | Knitting
+  97 | 2019-05-03 | 12:03:11 | etiam faucibus cursus urna Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                                                      |       | Che.Blankenship@mail.mcgill.ca |       4 |       4 | Knitting
+  90 | 2019-06-01 | 08:05:10 | nec molestie sed justo pellentesque viverra pede ac diam cras pellentesque volutpat dui maecenas tristique est et Follow Knitting on instagram, @KnittingOnSocialMedia !               |       | Sherry33@zoho.com              |       4 |       4 | Knitting
+  98 | 2019-09-16 | 07:52:46 | lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien Follow Knitting on instagram, @KnittingOnSocialMedia !                            |       | LorenaSheridan11@gmx.com       |       4 |       4 | Knitting
+  84 | 2019-10-14 | 00:25:29 | mi Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                                                                              |       | LorenaSheridan11@gmx.com       |       4 |       4 | Knitting
+  94 | 2019-04-06 | 05:02:17 | rutrum nulla tellus in sagittis dui vel nisl Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                                    |       | KingMaddox@aol.com             |       4 |       4 | Knitting
+  96 | 2019-07-20 | 06:57:02 | This post violates the guidelines and has been removed. Follow Knitting on instagram, @KnittingOnSocialMedia !                                                                         |       | KirbyPuff@aol.com              |       4 |       4 | Knitting
+(25 rows)
+
+
+That is all 4 updates!
