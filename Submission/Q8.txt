@@ -1,9 +1,9 @@
-
-
+Statements to run after the tables are already created
 
 ALTER TABLE notification ADD CHECK (type='Like' OR type='Comment' OR type='Share');
 ALTER TABLE advertisement ADD CHECK (price > 10);
 
+New SQL code for table creation of two tables with CHECK Constraint
 
 CREATE TABLE notification (
 	date date NOT NULL,
