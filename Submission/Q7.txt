@@ -1,21 +1,21 @@
 --This view gets the list of all advertisements that generate over the average amount of money that 
 --advertisements in the table generate
-CREATE VIEW profitable_ads AS
+CREATE vIEW profitable_ads AS
 SELECT *
 FROM advertisement
 WHERE price > (SELECT AVG(price) from advertisement);
 
-CREATE VIEW
+CREATE vIEW
 
 --This view gets the first_name of all the users and the id number of the page they manage 
 
-CREATE VIEW page_managers AS
+CREATE vIEW page_managers AS
 SELECT A2.first_name, A1.page_id
 FROM accountuser A2 INNER JOIN manages A1
 ON A2.email = A1.email
 ORDER BY A1.page_id DESC;
 
-CREATE VIEW
+CREATE vIEW
 
 SELECT * FROM profitable_ads;
 
@@ -36,3 +36,26 @@ SELECT * FROM page_managers LIMIT 5;
  Kit        |       4
  Kobie      |       3
 (5 rows)
+
+
+UPDATE profitable_ads SET price = 45.45 WHERE pid = 66;
+UPDATE 1
+
+ pid | price  
+-----+--------
+ 132 |  50.81
+  23 |  64.68
+ 110 |  20.32
+  22 | 182.39
+  44 | 114.90
+  66 |  45.45
+(6 rows)
+
+UPDATE page_managers SET page_id = 3 WHERE first_name = 'Kiara';
+ERROR:  cannot update view "page_managers"
+DETAIL:  views that do not select from a single table or view are not automatically updatable.
+HINT:  To enable updating the view, provide an INSTEAD OF UPDATE trigger or an unconditional ON UPDATE DO INSTEAD rule.
+
+What happens when you try to run SQL UPDATE on a view?
+Here we see that the UPDATE clause works on the profitable_ads view but does not work on the page_managers view. From the error, in order to update a table directly through a view the view itself must only involve a single table. 
+When views involve multiple tables they do not hold the actual data, they simply store a shorthand for a larger query. Running an UPDATE clause on a query has no effect, therefore views with multiple tables cannot be changed using UPDATE.
