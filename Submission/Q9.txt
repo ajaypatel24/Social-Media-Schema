@@ -1,0 +1,4 @@
+Automated data generation & Real data sets:
+Data for the accountuser, comment and event tables were generated automatically using https://www.generatedata.com/ and https://mockaroo.com/
+-to use them, a table structure was specified along with categories for each column. The categories generated realistic data sets for the tables
+which modeled real world names. When needed, random dates and time were also generated.

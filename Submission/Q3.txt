@@ -1,0 +1,26 @@
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+        email        | first_name | last_name |             password             
+---------------------+------------+-----------+----------------------------------
+ Storey5@gmail.com   | Milli      | Storey    | 4d929de130b59358dd27cea01a3cff10
+ Anish1994@gmail.com | Anisha     | Albert    | 88c3032ad4facb36f01072478cbdd582
+(2 rows)
+
+       email       |    friend_email     
+-------------------+---------------------
+ Storey5@gmail.com | Anish1994@gmail.com
+(1 row)
+
+ page_id |     page_name      
+---------+--------------------
+       2 | Plants & Gardening
+(1 row)
+
+ pid |    date    |   time   |                              text                               | image |        email        | page_id 
+-----+------------+----------+-----------------------------------------------------------------+-------+---------------------+---------
+   4 | 2020-02-13 | 21:24:14 | suscipit nulla elit ac nulla sed vel enim sit amet nunc viverra |       | Anish1994@gmail.com |       2
+(1 row)
+

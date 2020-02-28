@@ -1,0 +1,32 @@
+
+
+
+ALTER TABLE notification ADD CHECK (type='Like' OR type='Comment' OR type='Share');
+ALTER TABLE advertisement ADD CHECK (price <= 20);
+
+
+CREATE TABLE notification (
+	date date NOT NULL,
+	time TIME NOT NULL,
+	type varchar(20),
+	iid integer,
+	PRIMARY KEY (date, time),
+	FOREIGN KEY (iid) REFERENCES Interaction(iid),
+	CHECK (type='Like' OR type='Comment' OR type='Share')
+);
+
+CREATE TABLE advertisement (
+	pid integer NOT NULL,
+	price integer,
+    PRIMARY KEY(pid),
+    FOREIGN KEY (pid) REFERENCES post(pid),
+    CHECK (price <= 20)   
+);
+
+INSERT INTO notification (date,time,type,iid) VALUES ('2019-09-30', '22:20:33', 'Tester', 43);
+ERROR:  new row for relation "notification" violates check constraint "notification_type_check"
+DETAIL:  Failing row contains (2019-09-30, 22:20:33, Tester, 43).
+
+INSERT INTO advertisement (pid,price) VALUES (23,56);
+ERROR:  new row for relation "advertisement" violates check constraint "advertisement_price_check"
+DETAIL:  Failing row contains (23, 56).

@@ -1,0 +1,159 @@
+       email        | first_name | last_name |             password             
+--------------------+------------+-----------+----------------------------------
+ RFox@live.com      | Rory       | Fox       | 08a70d30070bf624dacbd4f94ab11490
+ tman@zoho.com      | Troy       | Harding   | 3bf10c7ef7d7d2f884dbdbb5f9eb49d6
+ TrevySpa@gmx.com   | Kaia       | Trevino   | 694b32a9a2f5189c490b80c0337bb246
+ KirbyPuff@aol.com  | Kirby      | Mercado   | abb3e60f89842cb1cc7b0dabe4125351
+ KingMaddox@aol.com | Kinga      | Maddox    | 83b53a15912fff073c11c79ee0d4c696
+ Mamba24@zoho.com   | Kobie      | Calderon  | 8f66d42c90b40543b40c9f7c760b9169
+(6 rows)
+
+          Table "cs421g38.accountuser"
+   Column   |          Type          | Modifiers 
+------------+------------------------+-----------
+ email      | character varying(320) | not null
+ first_name | character varying(20)  | 
+ last_name  | character varying(20)  | 
+ password   | character varying(320) | 
+Indexes:
+    "accountuser_pkey" PRIMARY KEY, btree (email)
+Referenced by:
+    TABLE "event" CONSTRAINT "event_organizer_fkey" FOREIGN KEY (organizer) REFERENCES accountuser(email)
+    TABLE "interaction" CONSTRAINT "interaction_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    TABLE "interacts" CONSTRAINT "interacts_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    TABLE "is_friend_with" CONSTRAINT "is_friend_with_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    TABLE "is_friend_with" CONSTRAINT "is_friend_with_friend_email_fkey" FOREIGN KEY (friend_email) REFERENCES accountuser(email)
+    TABLE "manages" CONSTRAINT "manages_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    TABLE "partakes" CONSTRAINT "partakes_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    TABLE "participates" CONSTRAINT "participates_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    TABLE "post" CONSTRAINT "post_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+
+             Table "cs421g38.event"
+  Column   |          Type          | Modifiers 
+-----------+------------------------+-----------
+ eid       | integer                | not null
+ date      | date                   | not null
+ time      | time without time zone | not null
+ location  | character varying(30)  | 
+ organizer | character varying(320) | 
+ page_id   | integer                | 
+Indexes:
+    "event_pkey" PRIMARY KEY, btree (eid)
+Foreign-key constraints:
+    "event_organizer_fkey" FOREIGN KEY (organizer) REFERENCES accountuser(email)
+    "event_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
+Referenced by:
+    TABLE "participates" CONSTRAINT "participates_eid_fkey" FOREIGN KEY (eid) REFERENCES event(eid)
+
+ count 
+-------
+     8
+(1 row)
+
+         Table "cs421g38.interaction"
+ Column  |          Type          | Modifiers 
+---------+------------------------+-----------
+ iid     | integer                | not null
+ page_id | integer                | 
+ pid     | integer                | 
+ email   | character varying(320) | 
+ date    | date                   | not null
+ time    | time without time zone | not null
+Indexes:
+    "interaction_pkey" PRIMARY KEY, btree (iid)
+Foreign-key constraints:
+    "interaction_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    "interaction_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
+    "interaction_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+Referenced by:
+    TABLE "comment" CONSTRAINT "comment_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+    TABLE ""like"" CONSTRAINT "like_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+    TABLE "notification" CONSTRAINT "notification_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+    TABLE "share" CONSTRAINT "share_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+
+    Table "cs421g38.like"
+ Column |  Type   | Modifiers 
+--------+---------+-----------
+ iid    | integer | not null
+Indexes:
+    "like_pkey" PRIMARY KEY, btree (iid)
+Foreign-key constraints:
+    "like_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+
+          email           |                                                              text                                                               | expiration_date 
+--------------------------+---------------------------------------------------------------------------------------------------------------------------------+-----------------
+ Mamba24@zoho.com         | neque duis bibendum morbi non quam nec dui luctus rutrum nulla tellus in sagittis dui vel                                       | 2019-09-24
+ Mamba24@zoho.com         | vel augue vestibulum ante ipsum primis                                                                                          | 2019-09-24
+ LorenaSheridan11@gmx.com | odio                                                                                                                            | 2020-02-14
+ LorenaSheridan11@gmx.com | at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci eget orci vehicula condimentum curabitur in libero | 2020-02-14
+ LorenaSheridan11@gmx.com | congue etiam justo etiam pretium                                                                                                | 2020-02-14
+ LorenaSheridan11@gmx.com | mi                                                                                                                              | 2020-02-14
+ LorenaSheridan11@gmx.com | lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien                            | 2020-02-14
+ LorenaSheridan11@gmx.com | ultrices mattis odio donec vitae nisi nam                                                                                       | 2020-02-14
+(8 rows)
+
+      Table "cs421g38.user_story"
+     Column      |  Type   | Modifiers 
+-----------------+---------+-----------
+ pid             | integer | not null
+ expiration_date | date    | 
+Indexes:
+    "user_story_pkey" PRIMARY KEY, btree (pid)
+Foreign-key constraints:
+    "user_story_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+
+            Table "cs421g38.post"
+ Column  |          Type          | Modifiers 
+---------+------------------------+-----------
+ pid     | integer                | not null
+ date    | date                   | not null
+ time    | time without time zone | not null
+ text    | character varying(200) | 
+ image   | character varying(20)  | 
+ email   | character varying(320) | 
+ page_id | integer                | 
+Indexes:
+    "post_pkey" PRIMARY KEY, btree (pid)
+Foreign-key constraints:
+    "post_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    "post_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
+Referenced by:
+    TABLE "advertisement" CONSTRAINT "advertisement_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+    TABLE "interaction" CONSTRAINT "interaction_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+    TABLE "interacts" CONSTRAINT "interacts_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+    TABLE "makes" CONSTRAINT "makes_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+    TABLE "monitors" CONSTRAINT "monitors_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+    TABLE "user_story" CONSTRAINT "user_story_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+
+       avg       |  max  
+-----------------+-------
+ 09:55:40.785714 | Share
+(1 row)
+
+        Table "cs421g38.notification"
+ Column |          Type          | Modifiers 
+--------+------------------------+-----------
+ date   | date                   | not null
+ time   | time without time zone | not null
+ type   | character varying(20)  | 
+ iid    | integer                | 
+Indexes:
+    "notification_pkey" PRIMARY KEY, btree (date, "time")
+Foreign-key constraints:
+    "notification_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+
+ difference 
+------------
+         48
+(1 row)
+
+              Table "cs421g38.admin"
+    Column     |         Type          | Modifiers 
+---------------+-----------------------+-----------
+ employee_id   | integer               | not null
+ access_rights | character varying(15) | 
+Indexes:
+    "admin_pkey" PRIMARY KEY, btree (employee_id)
+Referenced by:
+    TABLE "monitors" CONSTRAINT "monitors_employee_id_fkey" FOREIGN KEY (employee_id) REFERENCES admin(employee_id)
+
