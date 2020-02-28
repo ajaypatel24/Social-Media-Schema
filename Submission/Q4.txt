@@ -1,3 +1,5 @@
+ SELECT * FROM accountuser LIMIT 5;
+ 
           email           | first_name | last_name  |             password             
 --------------------------+------------+------------+----------------------------------
  a@a.com                  | Bob        | Johnson    | bob123
@@ -6,6 +8,8 @@
  myfirstemail@hotmail.com | Timmy      | Johnson    | 6f387ed7a2b22627363214b149f0220f
  Steffa@yahoo.com         | Stefania   | Maccaffrey | fb8ac6726f97c6c5e47eb8ab6088c90b
 (5 rows)
+
+ SELECT * FROM admin LIMIT 5;
 
  employee_id | access_rights 
 -------------+---------------
@@ -16,6 +20,8 @@
            5 | private
 (5 rows)
 
+SELECT * FROM advertisement LIMIT 5;
+ 
  pid | price 
 -----+-------
  110 |    15
@@ -25,6 +31,9 @@
   66 |    15
 (5 rows)
 
+
+ SELECT * FROM comment LIMIT 5;
+ 
  iid |                                                                                                                                                                         text                                                                                                                                                                          
 -----+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   84 | Unpacked now declared put you confined daughter improved. Celebrated imprudence few interested especially reasonable off one. Wonder bed elinor family secure met. It want gave west into high no in. Depend repair met before man admire see and. An he observe be it covered delight hastily message. Margaret no ladyship endeavor ye to settling.
@@ -33,6 +42,8 @@
  127 |  It want gave west into high no in
  110 | Offices parties lasting outward nothing age few resolve
 (5 rows)
+
+SELECT * FROM event LIMIT 5;
 
  eid |    date    |   time   |  location   |    organizer     | page_id 
 -----+------------+----------+-------------+------------------+---------
@@ -43,6 +54,8 @@
   80 | 2020-01-06 | 11:57:32 | Itu         | Mamba24@zoho.com |       3
 (5 rows)
 
+SELECT * FROM interaction LIMIT 5;
+
  iid | page_id | pid |      email      |    date    |   time   
 -----+---------+-----+-----------------+------------+----------
   36 |       1 |  65 | BigHoff@gmx.com | 2019-04-12 | 21:20:35
@@ -51,6 +64,8 @@
  121 |       1 |  65 | BigHoff@gmx.com | 2019-04-12 | 21:20:35
   31 |       1 |  65 | BigHoff@gmx.com | 2019-04-12 | 21:20:35
 (5 rows)
+
+SELECT * FROM interacts LIMIT 5;
 
  pid |            email            
 -----+-----------------------------
@@ -61,6 +76,8 @@
   89 | Anish1994@gmail.com
 (5 rows)
 
+SELECT * FROM is_friend_with LIMIT 5;
+
        email       |       friend_email       
 -------------------+--------------------------
  Storey5@gmail.com | Anish1994@gmail.com
@@ -69,6 +86,8 @@
  RFox@live.com     | Storey5@gmail.com
  RFox@live.com     | JLG@live.com
 (5 rows)
+
+SELECT * FROM "like" LIMIT 5;
 
  iid 
 -----
@@ -79,6 +98,8 @@
  114
 (5 rows)
 
+SELECT * FROM makes LIMIT 5;
+
  page_id | pid 
 ---------+-----
        1 |  43
@@ -87,6 +108,8 @@
        3 |  98
        5 | 101
 (5 rows)
+
+SELECT * FROM manages LIMIT 5;
 
  page_id |           email           
 ---------+---------------------------
@@ -97,6 +120,8 @@
        4 | FirstAidKid@zoho.com
 (5 rows)
 
+SELECT * FROM monitors LIMIT 5;
+
  employee_id | pid 
 -------------+-----
          116 | 126
@@ -105,6 +130,8 @@
          138 | 114
            2 |  22
 (5 rows)
+
+SELECT * FROM notification LIMIT 5;
 
     date    |   time   |  type   | iid 
 ------------+----------+---------+-----
@@ -115,6 +142,8 @@
  2019-08-14 | 10:11:26 | Like    |  31
 (5 rows)
 
+SELECT * FROM page LIMIT 5;
+
  page_id |     page_name      
 ---------+--------------------
        1 | Sewing Time
@@ -123,6 +152,8 @@
        4 | Knitting
        5 | Crochet
 (5 rows)
+
+SELECT * FROM partakes LIMIT 5;
 
  page_id |         email         
 ---------+-----------------------
@@ -133,6 +164,8 @@
        5 | BigA@gmail.com
 (5 rows)
 
+SELECT * FROM participates LIMIT 5;
+
  eid |         email         
 -----+-----------------------
  135 | a@a.com
@@ -141,6 +174,8 @@
   92 | Ray23@gmail.com
  148 | Steffa@yahoo.com
 (5 rows)
+
+SELECT * FROM post LIMIT 5;
 
  pid |    date    |   time   |                                           text                                            | image |             email              | page_id 
 -----+------------+----------+-------------------------------------------------------------------------------------------+-------+--------------------------------+---------
@@ -151,6 +186,8 @@
  131 | 2019-06-05 | 06:17:06 | id                                                                                        |       | Che.Blankenship@mail.mcgill.ca |       6
 (5 rows)
 
+SELECT * FROM share LIMIT 5;
+
  iid 
 -----
  130
@@ -159,6 +196,8 @@
   56
  137
 (5 rows)
+
+SELECT * FROM user_story LIMIT 5;
 
  pid | expiration_date 
 -----+-----------------
