@@ -1,3 +1,4 @@
+----------QUERY 1-----------
 SELECT * FROM accountuser WHERE accountuser.email IN (SELECT organizer FROM Event); 
 --The above script returns all the users that have organized at least one event
 
@@ -10,6 +11,8 @@ SELECT * FROM accountuser WHERE accountuser.email IN (SELECT organizer FROM Even
  KingMaddox@aol.com | Kinga      | Maddox    | 83b53a15912fff073c11c79ee0d4c696
  Mamba24@zoho.com   | Kobie      | Calderon  | 8f66d42c90b40543b40c9f7c760b9169
 (6 rows)
+
+----------Description of Relations for QUERY 1----------
 
           Table "cs421g38.accountuser"
    Column   |          Type          | Modifiers 
@@ -49,6 +52,7 @@ Referenced by:
     TABLE "participates" CONSTRAINT "participates_eid_fkey" FOREIGN KEY (eid) REFERENCES event(eid)
 
 
+----------QUERY 2-----------
 SELECT count(*) FROM (Interaction NATURAL JOIN "like") WHERE email = 'BigHoff@gmx.com'; 
 --The above script returns the total number of Like interactions associated with the user 
 --that has the email address 'BigHoof@gmx.com' 
@@ -57,6 +61,8 @@ SELECT count(*) FROM (Interaction NATURAL JOIN "like") WHERE email = 'BigHoff@gm
 -------
      8
 (1 row)
+
+----------Description of Relations for QUERY 2----------
 
          Table "cs421g38.interaction"
  Column  |          Type          | Modifiers 
@@ -89,6 +95,7 @@ Foreign-key constraints:
     "like_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
 
 
+----------QUERY 3-----------
 SELECT email, text, expiration_date FROM (user_story NATURAL JOIN Post) WHERE expiration_date > '2019-06-05' ORDER BY expiration_date ASC; 
 --The above script returns all the user_story posts and the users associated with them that expired after
 --the date 2019-06-05
@@ -105,6 +112,8 @@ SELECT email, text, expiration_date FROM (user_story NATURAL JOIN Post) WHERE ex
  LorenaSheridan11@gmx.com | lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien                            | 2020-02-14
  LorenaSheridan11@gmx.com | ultrices mattis odio donec vitae nisi nam                                                                                       | 2020-02-14
 (8 rows)
+
+----------Description of Relations for QUERY 3----------
 
       Table "cs421g38.user_story"
      Column      |  Type   | Modifiers 
@@ -140,6 +149,7 @@ Referenced by:
     TABLE "user_story" CONSTRAINT "user_story_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
 
 
+----------QUERY 4-----------
 SELECT AVG(time),MAX(type) FROM notification WHERE date < '2019-10-12'; 
 --The above script returns the average time of day of notifications and the most frequent type of
 --notification before the date 2019-10-12
@@ -148,6 +158,8 @@ SELECT AVG(time),MAX(type) FROM notification WHERE date < '2019-10-12';
 -----------------+-------
  09:55:40.785714 | Share
 (1 row)
+
+----------Description of Relations for QUERY 4----------
 
         Table "cs421g38.notification"
  Column |          Type          | Modifiers 
@@ -162,6 +174,7 @@ Foreign-key constraints:
     "notification_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
 
 
+----------QUERY 5-----------
 SELECT employee_id FROM (monitors NATURAL JOIN admin) WHERE admin.access_rights = 'all' GROUP BY employee_id HAVING count(*) >= 3;
 --The above script returns the system administrator employee_ids with maximum access rights that monitor 3 or more pages
 
@@ -172,6 +185,8 @@ SELECT employee_id FROM (monitors NATURAL JOIN admin) WHERE admin.access_rights 
          116
          145
 (4 rows)
+
+----------Description of Relations for QUERY 5----------
 
               Table "cs421g38.monitors"
    Column    |  Type   | Modifiers 

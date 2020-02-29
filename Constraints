@@ -1,8 +1,0 @@
-is_friend_with
-1. Friend should not be able to become friends with themselves
-2. (email, friend_email) Composite Key should be unique in either permutation
-time datatype
-3. Assume timezone is EST in the database
-
-4. Like comment and share cannot share any members (have same iid in both) (pretty sure this can be enforced with SQL)
-5. Advertisement and Story cannot share any members (have same iid in both) (this can also be enforced)

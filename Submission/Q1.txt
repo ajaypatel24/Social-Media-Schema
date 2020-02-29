@@ -1,12 +1,69 @@
 Missing Functional requirements from Project 1
 1. The social network should allow users to make and accept friendship requests. 
-2. A user can have at most 5000 friends.
+2. A accountuser can have at most 5000 friends.
 3. A page can have as many followers as there are users in a network. 
 4. The social network should allow users to create posts with a maximum of 40 000 characters. 
 5. The social network should allow pages and users to modify or delete posts they’ve made.
-6. The social network should notify the user when an interaction happens with one of their posts. 
+6. The social network should notify the accountuser when an interaction happens with one of their posts. 
 7. The social network should allow users to create events and invite people they are friends with to it. 
 8. The social network should allow users to create pages of which they are automatically administrators.
-9. A user can follow an unlimited number of pages. 
-10. System administrators can modify or delete any posts made by any user except other social administrators.
+9. A accountuser can follow an unlimited number of pages. 
+10. System administrators can modify or delete any posts made by any accountuser except other social administrators.
+
+Relational Model updated 
+
+----------Entity Sets----------
+accountuser ( email , first_name, last_name, password) Primary key email
+Interaction ( iid, page_id, pid, email, date, time) Primary key iid
+-foreign key email references accountuser
+-foreign key page_id references page
+-foreign key pid references post
+Like ( iid ) Primary key iid
+-foreign key iid references interaction
+Comment ( iid , text) Primary key iid
+-foreign key iid references interaction
+Share ( iid ) Primary key iid
+-foreign key iid references interaction
+Notification (iid, date , time ,type) Primary key (date, time)
+-foreign key iid references interaction
+Post ( pid ,date,time,text,image, email, page_id) Primary key pid
+-foreign key email references accountuser
+-foreign key page_id references page
+admin( Employee_id ,AccessRights) Primary key Employee_id
+Event ( eid ,date,time,location, organizer, page_id) Primary key eid
+-foreign key organizer references accountuser
+-foreign key page_id references page
+Page ( page_id , page_name) Primary key page_id
+
+
+----------Relationships----------
+manages ( page_id , email )
+-foreign key page_id references Page
+-foreign key email references accountuser
+partakes ( page_id , email )
+-foreign page_id references Page
+-foreign key email references accountuser
+participates ( eid , email )
+-foreign key eid references Event
+-foreign key email references accountuser
+interacts ( pid , email)
+-foreign key pid references post
+-foreign key email references accountuser
+is_friend_with ( email, friend_email )
+-foreign key email references accountuser
+-foreign key friend_email references accountuser
+makes ( pid , page_id)
+-foreign key pid references post
+-foreign key page_id references page
+monitors (employee_id , pid )
+-foreign key employee_id references admin
+-foreign key pid references post
+
+----------Extra Constraints----------
+
+is_friend_with table 
+1. Friend should not be able to become friends with themselves
+2. (email, friend_email) Composite Key should be unique in either permutation
+time datatype
+3. Assume timezone is EST in the database
 

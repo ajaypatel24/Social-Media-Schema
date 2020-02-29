@@ -23,6 +23,8 @@ CREATE TABLE advertisement (
     CHECK (price > 10)   
 );
 
+-----------Attempt to Violate CHECK----------
+
 INSERT INTO notification (date,time,type,iid) VALUES ('2019-09-30', '22:20:33', 'Tester', 43);
 ERROR:  new row for relation "notification" violates check constraint "notification_type_check"
 DETAIL:  Failing row contains (2019-09-30, 22:20:33, Tester, 43).

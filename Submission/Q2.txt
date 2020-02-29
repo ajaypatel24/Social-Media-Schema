@@ -1,3 +1,137 @@
+              Table "cs421g38.admin"
+    Column     |         Type          | Modifiers 
+---------------+-----------------------+-----------
+ employee_id   | integer               | not null
+ access_rights | character varying(15) | 
+Indexes:
+    "admin_pkey" PRIMARY KEY, btree (employee_id)
+Referenced by:
+    TABLE "monitors" CONSTRAINT "monitors_employee_id_fkey" FOREIGN KEY (employee_id) REFERENCES admin(employee_id)
+
+          Table "cs421g38.accountuser"
+   Column   |          Type          | Modifiers 
+------------+------------------------+-----------
+ email      | character varying(320) | not null
+ first_name | character varying(20)  | 
+ last_name  | character varying(20)  | 
+ password   | character varying(320) | 
+Indexes:
+    "accountuser_pkey" PRIMARY KEY, btree (email)
+Referenced by:
+    TABLE "event" CONSTRAINT "event_organizer_fkey" FOREIGN KEY (organizer) REFERENCES accountuser(email)
+    TABLE "interaction" CONSTRAINT "interaction_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    TABLE "interacts" CONSTRAINT "interacts_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    TABLE "is_friend_with" CONSTRAINT "is_friend_with_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    TABLE "is_friend_with" CONSTRAINT "is_friend_with_friend_email_fkey" FOREIGN KEY (friend_email) REFERENCES accountuser(email)
+    TABLE "manages" CONSTRAINT "manages_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    TABLE "partakes" CONSTRAINT "partakes_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    TABLE "participates" CONSTRAINT "participates_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    TABLE "post" CONSTRAINT "post_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email) ON DELETE CASCADE
+
+             Table "cs421g38.page"
+  Column   |         Type          | Modifiers 
+-----------+-----------------------+-----------
+ page_id   | integer               | not null
+ page_name | character varying(30) | 
+Indexes:
+    "page_pkey" PRIMARY KEY, btree (page_id)
+Referenced by:
+    TABLE "event" CONSTRAINT "event_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
+    TABLE "interaction" CONSTRAINT "interaction_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
+    TABLE "makes" CONSTRAINT "makes_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
+    TABLE "manages" CONSTRAINT "manages_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
+    TABLE "partakes" CONSTRAINT "partakes_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
+    TABLE "post" CONSTRAINT "post_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
+
+             Table "cs421g38.event"
+  Column   |          Type          | Modifiers 
+-----------+------------------------+-----------
+ eid       | integer                | not null
+ date      | date                   | not null
+ time      | time without time zone | not null
+ location  | character varying(30)  | 
+ organizer | character varying(320) | 
+ page_id   | integer                | 
+Indexes:
+    "event_pkey" PRIMARY KEY, btree (eid)
+Foreign-key constraints:
+    "event_organizer_fkey" FOREIGN KEY (organizer) REFERENCES accountuser(email)
+    "event_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
+Referenced by:
+    TABLE "participates" CONSTRAINT "participates_eid_fkey" FOREIGN KEY (eid) REFERENCES event(eid)
+
+            Table "cs421g38.post"
+ Column  |          Type          | Modifiers 
+---------+------------------------+-----------
+ pid     | integer                | not null
+ date    | date                   | not null
+ time    | time without time zone | not null
+ text    | character varying(200) | 
+ image   | character varying(20)  | 
+ email   | character varying(320) | 
+ page_id | integer                | 
+Indexes:
+    "post_pkey" PRIMARY KEY, btree (pid)
+Foreign-key constraints:
+    "post_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email) ON DELETE CASCADE
+    "post_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
+Referenced by:
+    TABLE "advertisement" CONSTRAINT "advertisement_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+    TABLE "interaction" CONSTRAINT "interaction_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+    TABLE "interacts" CONSTRAINT "interacts_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid) ON DELETE CASCADE
+    TABLE "makes" CONSTRAINT "makes_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+    TABLE "monitors" CONSTRAINT "monitors_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+    TABLE "user_story" CONSTRAINT "user_story_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+
+         Table "cs421g38.interaction"
+ Column  |          Type          | Modifiers 
+---------+------------------------+-----------
+ iid     | integer                | not null
+ page_id | integer                | 
+ pid     | integer                | 
+ email   | character varying(320) | 
+ date    | date                   | not null
+ time    | time without time zone | not null
+Indexes:
+    "interaction_pkey" PRIMARY KEY, btree (iid)
+Foreign-key constraints:
+    "interaction_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
+    "interaction_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
+    "interaction_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
+Referenced by:
+    TABLE "comment" CONSTRAINT "comment_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+    TABLE ""like"" CONSTRAINT "like_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+    TABLE "notification" CONSTRAINT "notification_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+    TABLE "share" CONSTRAINT "share_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+
+    Table "cs421g38.like"
+ Column |  Type   | Modifiers 
+--------+---------+-----------
+ iid    | integer | not null
+Indexes:
+    "like_pkey" PRIMARY KEY, btree (iid)
+Foreign-key constraints:
+    "like_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+
+          Table "cs421g38.comment"
+ Column |          Type          | Modifiers 
+--------+------------------------+-----------
+ iid    | integer                | not null
+ text   | character varying(500) | 
+Indexes:
+    "comment_pkey" PRIMARY KEY, btree (iid)
+Foreign-key constraints:
+    "comment_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+
+    Table "cs421g38.share"
+ Column |  Type   | Modifiers 
+--------+---------+-----------
+ iid    | integer | not null
+Indexes:
+    "share_pkey" PRIMARY KEY, btree (iid)
+Foreign-key constraints:
+    "share_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+
          Table "cs421g38.interacts"
  Column |          Type          | Modifiers 
 --------+------------------------+-----------
@@ -8,8 +142,8 @@ Indexes:
     "interacts_pid_key" UNIQUE CONSTRAINT, btree (pid)
 Foreign-key constraints:
     "interacts_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
-    "interacts_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
-
+    "interacts_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid) 
+    
           Table "cs421g38.is_friend_with"
     Column    |          Type          | Modifiers 
 --------------+------------------------+-----------
@@ -18,15 +152,6 @@ Foreign-key constraints:
 Foreign-key constraints:
     "is_friend_with_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
     "is_friend_with_friend_email_fkey" FOREIGN KEY (friend_email) REFERENCES accountuser(email)
-
-    Table "cs421g38.like"
- Column |  Type   | Modifiers 
---------+---------+-----------
- iid    | integer | not null
-Indexes:
-    "like_pkey" PRIMARY KEY, btree (iid)
-Foreign-key constraints:
-    "like_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
 
     Table "cs421g38.makes"
  Column  |  Type   | Modifiers 
@@ -70,26 +195,8 @@ Foreign-key constraints:
  iid    | integer                | 
 Indexes:
     "notification_pkey" PRIMARY KEY, btree (date, "time")
-Check constraints:
-    "notification_type_check" CHECK (type::text = 'Like'::text OR type::text = 'Comment'::text OR type::text = 'Share'::text)
-    "notification_type_check1" CHECK (type::text = 'Like'::text OR type::text = 'Comment'::text OR type::text = 'Share'::text)
 Foreign-key constraints:
     "notification_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
-
-             Table "cs421g38.page"
-  Column   |         Type          | Modifiers 
------------+-----------------------+-----------
- page_id   | integer               | not null
- page_name | character varying(30) | 
-Indexes:
-    "page_pkey" PRIMARY KEY, btree (page_id)
-Referenced by:
-    TABLE "event" CONSTRAINT "event_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
-    TABLE "interaction" CONSTRAINT "interaction_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
-    TABLE "makes" CONSTRAINT "makes_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
-    TABLE "manages" CONSTRAINT "manages_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
-    TABLE "partakes" CONSTRAINT "partakes_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
-    TABLE "post" CONSTRAINT "post_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
 
           Table "cs421g38.partakes"
  Column  |          Type          | Modifiers 
@@ -113,37 +220,15 @@ Foreign-key constraints:
     "participates_eid_fkey" FOREIGN KEY (eid) REFERENCES event(eid)
     "participates_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
 
-            Table "cs421g38.post"
- Column  |          Type          | Modifiers 
----------+------------------------+-----------
- pid     | integer                | not null
- date    | date                   | not null
- time    | time without time zone | not null
- text    | character varying(200) | 
- image   | character varying(20)  | 
- email   | character varying(320) | 
- page_id | integer                | 
+  Table "cs421g38.advertisement"
+ Column |     Type     | Modifiers 
+--------+--------------+-----------
+ pid    | integer      | not null
+ price  | numeric(7,2) | 
 Indexes:
-    "post_pkey" PRIMARY KEY, btree (pid)
+    "advertisement_pkey" PRIMARY KEY, btree (pid)
 Foreign-key constraints:
-    "post_email_fkey" FOREIGN KEY (email) REFERENCES accountuser(email)
-    "post_page_id_fkey" FOREIGN KEY (page_id) REFERENCES page(page_id)
-Referenced by:
-    TABLE "advertisement" CONSTRAINT "advertisement_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
-    TABLE "interaction" CONSTRAINT "interaction_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
-    TABLE "interacts" CONSTRAINT "interacts_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
-    TABLE "makes" CONSTRAINT "makes_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
-    TABLE "monitors" CONSTRAINT "monitors_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
-    TABLE "user_story" CONSTRAINT "user_story_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
-
-    Table "cs421g38.share"
- Column |  Type   | Modifiers 
---------+---------+-----------
- iid    | integer | not null
-Indexes:
-    "share_pkey" PRIMARY KEY, btree (iid)
-Foreign-key constraints:
-    "share_iid_fkey" FOREIGN KEY (iid) REFERENCES interaction(iid)
+    "advertisement_pid_fkey" FOREIGN KEY (pid) REFERENCES post(pid)
 
       Table "cs421g38.user_story"
      Column      |  Type   | Modifiers 
