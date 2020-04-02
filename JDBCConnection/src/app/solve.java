@@ -18,42 +18,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public static void DatabaseConnection() throws SQLException {
-		int sqlCode = 0; // Variable to hold SQLCODE
-		String sqlState = "00000"; // Variable to hold SQLSTATE
-
-		//Connection Start
-		try {
-			DriverManager.registerDriver(new org.postgresql.Driver());
-		} catch (Exception cnfe) {
-			System.out.println("Class not found");
-		}
-		@SuppressWarnings("resource")
-		Scanner stdin = new Scanner(System.in);
-		String pass = stdin.next();
-		String url = "jdbc:postgresql://comp421.cs.mcgill.ca:5432/cs421";
-		Connection con = DriverManager.getConnection(url, "cs421g38", pass);
-		Statement statement = con.createStatement();
-		//Connection End
-
-		try {
-			String querySQL = "SELECT * FROM person;";
-			System.out.println(querySQL);
-			java.sql.ResultSet rs = statement.executeQuery(querySQL);
-			while (rs.next()) {
-				String name = rs.getString("pid");
-				System.out.println(name);
-			}
-			System.out.println("Query Complete");
-		} catch (SQLException e) {
-			sqlCode = e.getErrorCode(); 
-			sqlState = e.getSQLState(); 
-			System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-		}
-
-		statement.close();
-		con.close();
-	}
+	
 	
 	public solve() {
 	} 
