@@ -8,7 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 import java.awt.*; 
-import javax.swing.*; 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel; 
 class solve extends JFrame implements ItemListener, ActionListener {
 	
 	
@@ -21,6 +22,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
 	
 	
 
+	
 
 	// frame 
 	static JFrame f; 
@@ -56,14 +58,14 @@ class solve extends JFrame implements ItemListener, ActionListener {
 
 		@SuppressWarnings("resource")
 		Scanner stdin = new Scanner (System.in);
-		//System.out.print("Username: ");
-		//String user = stdin.next();
+		System.out.print("Username: ");
+		String user = stdin.next();
 		
 		System.out.print("Password: ");
 		String pass = stdin.next();
 		
 		String url = "jdbc:postgresql://comp421.cs.mcgill.ca:5432/cs421";
-		Connection con = DriverManager.getConnection(url, "cs421g38", pass);
+		Connection con = DriverManager.getConnection(url, user, pass);
 		Statement statement = con.createStatement();
 		System.out.println("Successful Connection");
 		//Connection Ends
@@ -97,8 +99,46 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	JTextField EmailField = new JTextField(20);
     	JTextField PasswordField = new JTextField(20);
     	
+    	//View All pages run by list of admins
+    	JButton Choose = new JButton("Select");
     	
+    	//Part of Option 2, preQuery
+    	String AdminCounter = "SELECT DISTINCT(count(first_name)) FROM accountuser NATURAL JOIN manages";
+    	String AdminQuery = "SELECT DISTINCT first_name FROM accountuser NATURAL JOIN manages";
+    	int AdminCountInt=0;
+    	java.sql.ResultSet AdminCount = statement.executeQuery(AdminCounter);
+    	while (AdminCount.next()) {
+    		String AdminCountFinal = AdminCount.getString("count");
+    		AdminCountInt = Integer.parseInt(AdminCountFinal);
+    		System.out.println(AdminCountInt);
+    		
+    	}
+    	String[] admins = new String[AdminCountInt-1];
+    	
+    	java.sql.ResultSet AdminResult = statement.executeQuery(AdminQuery);
+    	int counter = 0;
+		while (AdminResult.next()) {
+			String name = AdminResult.getString("first_name");
+			admins[counter] = name;
+			counter++;
+		}
+		
+    	JComboBox Admin = new JComboBox(admins);
     	JLabel Tester = new JLabel("Tester:");
+    	String[] ColumnName = {"Admin of Table"};
+    	JTable aTable = new JTable();
+    	DefaultTableModel aModel = (DefaultTableModel) aTable.getModel();
+    	aModel.setColumnIdentifiers(ColumnName);
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	//Option 3
     	
     	JPanel Option1 = new JPanel();
     	BoxLayout layout1 = new BoxLayout(Option1, BoxLayout.Y_AXIS);
@@ -119,6 +159,9 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	BoxLayout layout2 = new BoxLayout(Option2, BoxLayout.Y_AXIS);
     	Option2.setLayout(layout2);
     	Option2.add(Tester);
+    	Option2.add(Choose);
+    	Option2.add(Admin);
+    	Option2.add(aTable);
     	layeredPane.add(Option2, "name_2074097485636900");
     	
     	JPanel Option3 = new JPanel();
@@ -184,7 +227,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
 				int sqlCode = 0; // Variable to hold SQLCODE
 				String sqlState = "00000"; // Variable to hold SQLSTATE
 				String opt = comboBox.getSelectedItem()+"";
-				if(opt.equals("Option 1")) {
+				if(opt.equals("Option 1")) { //Insert person into table
 					layeredPane.removeAll();
 					layeredPane.add(Option1);
 					layeredPane.repaint();
@@ -195,12 +238,16 @@ class solve extends JFrame implements ItemListener, ActionListener {
 					String Email = EmailField.getText();
 					String Pass = PasswordField.getText();
 					System.out.println(First + " " + Last + " " + Email + " " + Pass);
-					String insertSQL = "INSERT INTO User VALUES ( " + First + "," + Last + "," + Email + "," + Pass +")";
+					String insertSQL = "INSERT INTO accountuser (email, first_name, last_name, password) " +  
+									   "VALUES (" + "'" + Email + "'" + "," + "'" + First + "'" + ", " + "'" + Last + "'" + ", " + "'" + Pass + "'" +")";
+					System.out.println(insertSQL);
 					try {
 						statement.executeUpdate(insertSQL);
+						lblNewLabel.setText("Insert Complete");
 					} catch (SQLException e1) {
 						sqlCode = e1.getErrorCode();
 						sqlState = e1.getSQLState();
+						lblNewLabel.setText(sqlState);
 						System.out.println("SQLcode: " + sqlCode);
 						System.out.println("SQLState: " + sqlState);
 					}
@@ -208,26 +255,48 @@ class solve extends JFrame implements ItemListener, ActionListener {
 					
 					
 					}	
-				if(opt.equals("Option 2")) {
+				if(opt.equals("Option 2")) { //Query for all pages admins 
+					
+					
+					Choose.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							aModel.setRowCount(0);
+							String AdminSelection = Admin.getSelectedItem()+"";
+							Tester.setText(AdminSelection);
+							int sqlCode = 0; // Variable to hold SQLCODE
+							String sqlState = "00000"; // Variable to hold SQLSTATE
+							try {
+								String querySQL = "SELECT page_name From (page NATURAL JOIN manages) NATURAL JOIN accountuser WHERE first_name = " + "'" + AdminSelection + "'";
+								System.out.println(querySQL);
+								java.sql.ResultSet rs = statement.executeQuery(querySQL);
+								java.sql.ResultSetMetaData rsmd = rs.getMetaData();
+								int colNo = rsmd.getColumnCount();
+								while (rs.next()) {
+									Object[] objects = new Object[colNo];
+									for (int i = 0; i < colNo; i++) {
+										objects[i] = rs.getObject(i+1);
+									}
+									aModel.addRow(objects);
+									//String name = rs.getString("page_name");
+									//System.out.println(name);
+									//l1.setText(name); 
+								}
+								aTable.setModel(aModel);
+								System.out.println("Query Complete");
+							} catch (SQLException err) {
+								sqlCode = err.getErrorCode(); 
+								sqlState = err.getSQLState(); 
+								System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+							}
+						}
+					});
 					layeredPane.removeAll();
 					layeredPane.add(Option2);
 					layeredPane.repaint();
 					layeredPane.revalidate();
-					try {
-						String querySQL = "SELECT * FROM admin;";
-						System.out.println(querySQL);
-						java.sql.ResultSet rs = statement.executeQuery(querySQL);
-						while (rs.next()) {
-							String name = rs.getString("employee_id");
-							System.out.println(name);
-							l1.setText(name); 
-						}
-						System.out.println("Query Complete");
-					} catch (SQLException err) {
-						sqlCode = err.getErrorCode(); 
-						sqlState = err.getSQLState(); 
-						System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-					}
+					
+					
+					
 				}
 				if(opt.equals("Option 3")) {
 					layeredPane.removeAll();
@@ -289,7 +358,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
 		f.show(); 
 	} 
 	
-
+	
 	public void itemStateChanged(ItemEvent e) 
 	{ 
 		// if the state combobox is changed 
