@@ -56,13 +56,13 @@ class solve extends JFrame implements ItemListener, ActionListener {
 		String user = stdin.next();
 		*/
 		
-		
+		/*
 		System.out.print("Password: ");
 		String pass = stdin.next();
-		
+		*/
 		
 		String url = "jdbc:postgresql://comp421.cs.mcgill.ca:5432/cs421";
-		Connection con = DriverManager.getConnection(url, "cs421g38", pass);
+		Connection con = DriverManager.getConnection(url, "cs421g38", "38dataBASED");
 		Statement statement = con.createStatement();
 		System.out.println("Successful Connection");
 		//Connection Ends
@@ -90,6 +90,8 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	JTextField LastNameField = new JTextField(20);
     	JTextField EmailField = new JTextField(20);
     	JTextField PasswordField = new JTextField(20);
+    	
+    	JButton ConfirmAdd = new JButton("Add User");
     	
     	
     	//Part of Option 2, preQuery
@@ -150,7 +152,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	
     	//Option 4
     	
-    	JLabel UserInformation = new JLabel("User Information");
+    	JLabel UserInformation = new JLabel("Enter a Name");
     	JLabel EventInformation = new JLabel("Event Information");
     	JTextField UserEvent = new JTextField(20);
     	JTable EventTable = new JTable();
@@ -162,6 +164,8 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	JComboBox JoinEvent = new JComboBox(LowCount);
     	JButton Refresh = new JButton("Refresh");
     	JComboBox<String> LowParticipationEvents = new JComboBox<String>();
+    	JLabel NumberParticipants = new JLabel("Number of Participants");
+    	JLabel EventId = new JLabel("Event ID");
     	
     	
     	
@@ -177,6 +181,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	Option1.add(EmailField);
     	Option1.add(Password);
     	Option1.add(PasswordField);
+    	Option1.add(ConfirmAdd);
     	layeredPane.add(Option1, "name_2074080574799800");
     	
     	JPanel Option2 = new JPanel();
@@ -209,15 +214,12 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	Option4.add(EventTable);
     	Option4.add(EventInformation);
     	Option4.add(Search);
+    	Option4.add(NumberParticipants);
     	Option4.add(JoinEvent);
+    	Option4.add(EventId);
     	Option4.add(LowParticipationEvents);
     	Option4.add(Refresh);
     	layeredPane.add(Option4, "name_2074113974014000");
-    	
-    	
-    	
-    	
-    	
     	
     	
     	String s1[] = { "Option 1", "Option 2", "Option 3", "Option 4", "Quit"}; 
@@ -225,9 +227,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	JLabel status = new JLabel("");
     	comboBox.setBounds(311, 11, 102, 22);
     	f.getContentPane().add(comboBox);
- 
-		
-		
+    	f.getContentPane().add(status);
 		JPanel p = new JPanel(); 
 		// create a object 
 		solve s = new solve(); 
@@ -236,38 +236,46 @@ class solve extends JFrame implements ItemListener, ActionListener {
 		f.getContentPane().setLayout(new FlowLayout()); 
 
 		// array of string contating cities 
-		
 
-		// create checkbox 
-		b1 = new JButton("Confirm");
 		// add ItemListener 
-		b1.addActionListener(new ActionListener() {
+		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int sqlCode = 0; // Variable to hold SQLCODE
-				String sqlState = "00000"; // Variable to hold SQLSTATE
+				status.setText("");
 				String opt = comboBox.getSelectedItem()+"";
 				if(opt.equals("Option 1")) { //Insert person into table
+					
+					
+					ConfirmAdd.addActionListener(new ActionListener() {
+						
+						public void actionPerformed(ActionEvent e) {
+							int sqlCode = 0; // Variable to hold SQLCODE
+							String sqlState = "00000"; // Variable to hold SQLSTATE
+							try {
+							String First = FirstNameField.getText();
+							String Last = LastNameField.getText();
+							String Email = EmailField.getText();
+							String Pass = PasswordField.getText();
+							String insertSQL = "INSERT INTO accountuser (email, first_name, last_name, password) " +  
+											   "VALUES (" + "'" + Email + "'" + "," + "'" + First + "'" + ", " + "'" + Last + "'" + ", " + "'" + Pass + "'" +")";
+								statement.executeUpdate(insertSQL);
+								status.setText("Insert Complete");
+								
+								FirstNameField.setText(""); LastNameField.setText(""); EmailField.setText(""); PasswordField.setText("");
+							} catch (SQLException e1) {
+								sqlCode = e1.getErrorCode();
+								sqlState = e1.getSQLState();
+								lblNewLabel.setText(sqlState);
+								System.out.println("SQLcode: " + sqlCode);
+								System.out.println("SQLState: " + sqlState);
+							}
+						}
+					});
+					
 					layeredPane.removeAll();
 					layeredPane.add(Option1);
 					layeredPane.repaint();
 					layeredPane.revalidate();
 					
-					String First = FirstNameField.getText();
-					String Last = LastNameField.getText();
-					String Email = EmailField.getText();
-					String Pass = PasswordField.getText();
-					String insertSQL = "INSERT INTO accountuser (email, first_name, last_name, password) " +  
-									   "VALUES (" + "'" + Email + "'" + "," + "'" + First + "'" + ", " + "'" + Last + "'" + ", " + "'" + Pass + "'" +")";
-					try {
-						statement.executeUpdate(insertSQL);
-						lblNewLabel.setText("Insert Complete");
-					} catch (SQLException e1) {
-						sqlCode = e1.getErrorCode();
-						sqlState = e1.getSQLState();
-						lblNewLabel.setText(sqlState);
-						System.out.println("SQLcode: " + sqlCode);
-						System.out.println("SQLState: " + sqlState);
-					}
 								
 					}	
 				if(opt.equals("Option 2")) { //Query for all pages admins 
@@ -355,6 +363,16 @@ class solve extends JFrame implements ItemListener, ActionListener {
 						}
 					});
 					
+					Yes.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							PromoteUser.setEnabled(true);
+						}
+					});
+					No.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							PromoteUser.setEnabled(false);
+						}
+					});
 					PromoteUser.addActionListener(new ActionListener () {
 						public void actionPerformed(ActionEvent e) {
 							int sqlCode = 0; // Variable to hold SQLCODE
@@ -429,7 +447,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
 							while(EventCounter.next()) {
 								length = Integer.parseInt(EventCounter.getString("count"));
 							}
-							UserInformation.setText(Integer.toString(length));
+							UserInformation.setText("Enter a User Name");
 							java.sql.ResultSet EventList = statement.executeQuery(ListOfEvent);
 							LowParticipationEvents.removeAllItems();
 							while (EventList.next()) {
@@ -543,21 +561,11 @@ class solve extends JFrame implements ItemListener, ActionListener {
 			}
 		});
 		comboBox.addItemListener(s); 
-
-		// create labels 
-		l = new JLabel("Select an option "); 
-
-		// set color of text 
-		l.setForeground(Color.red); 	
-
-		p.add(l); 
-		
-		p.add(b1);
 		// add panel to frame 
 		f.getContentPane().add(p); 
 
 		// set the size of frame 
-		f.setSize(600, 600); 
+		f.setSize(450, 400); 
 
 		f.show(); 
 	} 
