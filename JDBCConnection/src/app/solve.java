@@ -47,20 +47,22 @@ class solve extends JFrame implements ItemListener, ActionListener {
 			System.out.println("Class not found");
 		}
 		
-		/*
+		
 		@SuppressWarnings("resource")
 		Scanner stdin = new Scanner (System.in);
 		
-		
+		/*
 		System.out.print("Username: ");
 		String user = stdin.next();
+		*/
+		
 		
 		System.out.print("Password: ");
 		String pass = stdin.next();
-		*/
+		
 		
 		String url = "jdbc:postgresql://comp421.cs.mcgill.ca:5432/cs421";
-		Connection con = DriverManager.getConnection(url, "cs421g38", "38dataBASED");
+		Connection con = DriverManager.getConnection(url, "cs421g38", pass);
 		Statement statement = con.createStatement();
 		System.out.println("Successful Connection");
 		//Connection Ends
@@ -74,9 +76,6 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	layeredPane.setBounds(10, 47, 403, 205);
     	f.getContentPane().add(layeredPane);
     	layeredPane.setLayout(new CardLayout(0, 0));
-    	
-    	
-    	
     	
     	JLabel lblNewLabel = new JLabel("Add new user");
     	JLabel lblNewLabel2 = new JLabel("View tables where user is admin");
@@ -150,7 +149,21 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	JComboBox<?> PageDropdown = new JComboBox<Object>(pages);
     	
     	//Option 4
-    	JButton Tester = new JButton("Tester");
+    	
+    	JLabel UserInformation = new JLabel("User Information");
+    	JLabel EventInformation = new JLabel("Event Information");
+    	JTextField UserEvent = new JTextField(20);
+    	JTable EventTable = new JTable();
+    	String[] ColumnNameEvent = {"Events"};
+    	DefaultTableModel EventModel = (DefaultTableModel) EventTable.getModel();
+    	EventModel.setColumnIdentifiers(ColumnNameEvent);
+    	JButton Search = new JButton("Search Events");
+    	String[] LowCount = {"0","1","2"};
+    	JComboBox JoinEvent = new JComboBox(LowCount);
+    	JButton Refresh = new JButton("Refresh");
+    	JComboBox<String> LowParticipationEvents = new JComboBox<String>();
+    	
+    	
     	
     	JPanel Option1 = new JPanel();
     	BoxLayout layout1 = new BoxLayout(Option1, BoxLayout.Y_AXIS);
@@ -172,6 +185,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	Option2.setLayout(layout2);
     	Option2.add(Admin);
     	Option2.add(aTable);
+    	Option2.add(lblNewLabel2);
     	layeredPane.add(Option2, "name_2074097485636900");
     	
     	JPanel Option3 = new JPanel();
@@ -190,17 +204,25 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	
     	BoxLayout layout4 = new BoxLayout(Option4, BoxLayout.Y_AXIS);
     	Option4.setLayout(layout4);
-    	Option4.add(Tester);
+    	Option4.add(UserInformation);
+    	Option4.add(UserEvent);
+    	Option4.add(EventTable);
+    	Option4.add(EventInformation);
+    	Option4.add(Search);
+    	Option4.add(JoinEvent);
+    	Option4.add(LowParticipationEvents);
+    	Option4.add(Refresh);
     	layeredPane.add(Option4, "name_2074113974014000");
     	
     	
     	
     	
-    	Option2.add(lblNewLabel2);
+    	
     	
     	
     	String s1[] = { "Option 1", "Option 2", "Option 3", "Option 4", "Quit"}; 
     	JComboBox<?> comboBox = new JComboBox<Object>(s1);
+    	JLabel status = new JLabel("");
     	comboBox.setBounds(311, 11, 102, 22);
     	f.getContentPane().add(comboBox);
  
@@ -388,6 +410,116 @@ class solve extends JFrame implements ItemListener, ActionListener {
 					layeredPane.revalidate();
 				}
 				if(opt.equals("Option 4")) {
+					
+					JoinEvent.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							int sqlCode = 0; // Variable to hold SQLCODE
+							String sqlState = "00000"; // Variable to hold SQLSTATE
+							try {
+							
+							
+							int c = Integer.parseInt(JoinEvent.getSelectedItem()+"");
+							String CountOfEvent = EventCount(String.valueOf(c));
+							String ListOfEvent = EventQuery(String.valueOf(c));
+							int length = 0;
+							int counter3 = 0;
+							String Event;
+							java.sql.ResultSet EventCounter = statement.executeQuery(CountOfEvent);
+							
+							while(EventCounter.next()) {
+								length = Integer.parseInt(EventCounter.getString("count"));
+							}
+							UserInformation.setText(Integer.toString(length));
+							java.sql.ResultSet EventList = statement.executeQuery(ListOfEvent);
+							LowParticipationEvents.removeAllItems();
+							while (EventList.next()) {
+								Event = EventList.getString("eid");
+								LowParticipationEvents.addItem(Event);
+								
+							}
+							
+							}
+							catch (SQLException err) {
+								sqlCode = err.getErrorCode(); 
+								sqlState = err.getSQLState(); 
+								System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+							}
+						}
+						
+					});
+					
+					Refresh.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							int sqlCode = 0; // Variable to hold SQLCODE
+							String sqlState = "00000"; // Variable to hold SQLSTATE
+							try {
+							String eid = LowParticipationEvents.getSelectedItem()+"";
+							String email = UserEvent.getText();
+							
+							String AccountQuery = "SELECT email FROM accountuser WHERE first_name = " + "'" + email + "'";
+							
+							java.sql.ResultSet AccountQ = statement.executeQuery(AccountQuery);
+							
+							while(AccountQ.next()) {
+								email = AccountQ.getString("email");
+							}
+							
+							 
+							String InsertQuery = "INSERT INTO participates (eid, email) "
+												+ "VALUES ("
+												+ "'" + eid + "'"
+												+ ","
+												+ "'" + email + "'"
+												+ ")";
+							
+							statement.executeUpdate(InsertQuery);
+							EventModel.setRowCount(0);
+							
+							
+							}
+							
+							
+							
+							catch (SQLException err) {
+								sqlCode = err.getErrorCode(); 
+								sqlState = err.getSQLState(); 
+								System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+							} 
+						}
+							
+					});
+					
+					Search.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							EventModel.setRowCount(0);
+							int sqlCode = 0; // Variable to hold SQLCODE
+							String sqlState = "00000"; // Variable to hold SQLSTATE
+							try {
+								String querySQL = "SELECT eid, first_name,email FROM participates NATURAL JOIN accountuser WHERE first_name = "
+													+ "'" + UserEvent.getText() + "'"
+													+ " ORDER BY eid" ;
+								java.sql.ResultSet rs = statement.executeQuery(querySQL);
+								java.sql.ResultSetMetaData rsmd = rs.getMetaData();
+								int colNo = rsmd.getColumnCount();
+								while (rs.next()) {
+									Object[] objects = new Object[colNo];
+									for (int i = 0; i < colNo; i++) {
+										objects[i] = rs.getObject(i+1);
+									}
+									EventModel.addRow(objects);
+								}
+								EventTable.setModel(EventModel);
+								System.out.println("Query Complete");
+							} catch (SQLException err) {
+								sqlCode = err.getErrorCode(); 
+								sqlState = err.getSQLState(); 
+								System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+							}
+						}
+					});
+					
+					
+					
 					layeredPane.removeAll();
 					layeredPane.add(Option4);
 					layeredPane.repaint();
@@ -436,7 +568,24 @@ class solve extends JFrame implements ItemListener, ActionListener {
 							" VALUES (" + Page_Id + "," + "'" + Email + "'" + ")";
 		return insertSQL;
 	}
-	@Override
+
+	public static String EventQuery(String count) {
+		String EventQuery ="SELECT eid,mycount FROM "
+				+ "(SELECT event.eid, count(email) mycount FROM participates RIGHT JOIN event ON participates.eid = event.eid GROUP BY event.eid ORDER BY mycount) q "
+				+ "WHERE mycount = "
+				+ count ;
+		System.out.println(EventQuery);
+		return EventQuery;
+		
+	}
+	public static String EventCount(String count) {
+		String EventQuery = "SELECT count(*) FROM "
+				+ "(SELECT event.eid, count(email) mycount FROM participates RIGHT JOIN event ON participates.eid = event.eid GROUP BY event.eid ORDER BY mycount) q "
+				+ "WHERE mycount = "
+				+ count ;
+		return EventQuery;
+		
+	}
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
