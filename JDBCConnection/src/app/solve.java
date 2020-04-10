@@ -18,6 +18,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
 	
 	// frame 
 	static JFrame f; 
+	static JFrame Logon;
 
 	// label 
 	static JLabel l;
@@ -60,9 +61,82 @@ class solve extends JFrame implements ItemListener, ActionListener {
 		System.out.print("Password: ");
 		String pass = stdin.next();
 		*/
+		Logon = new JFrame("Login");
+		
+		
+		
+    	//Login
+    	JTextField Username = new JTextField(10);
+    	JPasswordField Pass = new JPasswordField(10);
+    	JButton Login = new JButton("Login");
+    	JLabel Feedback = new JLabel("Enter Credentials to Access GUI");
+    	JLabel Entry = new JLabel("");
+    	JLabel Uname = new JLabel("Username");
+    	JLabel P = new JLabel("Password");
+    	
+		JPanel Authentication = new JPanel();
+    	BoxLayout layout0 = new BoxLayout(Authentication, BoxLayout.PAGE_AXIS);
+    	Authentication.setLayout(layout0);
+    	
+    	Authentication.add(Box.createRigidArea(new Dimension(5,0)));
+    	Authentication.add(Uname);
+    	Authentication.add(Username);
+    	Authentication.add(P);
+    	Authentication.add(Pass);
+    	Authentication.add(Login);
+    	Authentication.add(Feedback);
+    	
+    	
+    	
+    	
+    	
+    	Logon.getContentPane().add(Authentication);
+  
+    	Logon.setSize(400,300);
+		Logon.getContentPane().setLayout(new FlowLayout());
+		Logon.setResizable(false);
+		Logon.show();
+		
+	
+		
 		
 		String url = "jdbc:postgresql://comp421.cs.mcgill.ca:5432/cs421";
-		Connection con = DriverManager.getConnection(url, "cs421g38", "38dataBASED");
+		Login.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Boolean auth = false;
+				
+				try {
+					Connection test = DriverManager.getConnection(url,Username.getText(), Pass.getText());
+					Statement statement = test.createStatement();
+					Entry.setText("true");
+					Feedback.setText("Authenticated");
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					
+				}
+				catch (SQLException e4) {
+					System.out.println(e4.getErrorCode());
+					Entry.setText("false");
+					Feedback.setText("Username-Password Combination is wrong");
+				}
+			}
+		});
+		
+		while(!Entry.getText().equals("true")){
+		    try {
+		       Thread.sleep(200);
+		    } catch(InterruptedException e) {
+		    }
+		}
+		
+		Logon.dispatchEvent(new WindowEvent(Logon, WindowEvent.WINDOW_CLOSING)); //close login window
+		
+		Connection con = DriverManager.getConnection(url, Username.getText(), Pass.getText());
 		Statement statement = con.createStatement();
 		System.out.println("Successful Connection");
 		//Connection Ends
@@ -80,6 +154,8 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	JLabel lblNewLabel = new JLabel("Add new user");
     	JLabel lblNewLabel2 = new JLabel("View tables where user is admin");
     	
+
+   
     	//Add User Option 1
     	JLabel FirstName = new JLabel("First Name");
     	JLabel LastName = new JLabel("Last Name");
@@ -162,7 +238,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	JButton Search = new JButton("Search Events");
     	String[] LowCount = {"0","1","2"};
     	JComboBox JoinEvent = new JComboBox(LowCount);
-    	JButton Refresh = new JButton("Refresh");
+    	JButton JoinNewEvent = new JButton("Join Event");
     	JComboBox<String> LowParticipationEvents = new JComboBox<String>();
     	JLabel NumberParticipants = new JLabel("Number of Participants");
     	JLabel EventId = new JLabel("Event ID");
@@ -172,6 +248,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	JPanel Option1 = new JPanel();
     	BoxLayout layout1 = new BoxLayout(Option1, BoxLayout.Y_AXIS);
     	Option1.setLayout(layout1);
+    	Option1.add(Box.createRigidArea(new Dimension(5,0)));
     	Option1.add(lblNewLabel);
     	Option1.add(FirstName);
     	Option1.add(FirstNameField);
@@ -188,6 +265,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	
     	BoxLayout layout2 = new BoxLayout(Option2, BoxLayout.Y_AXIS);
     	Option2.setLayout(layout2);
+    	Option2.add(Box.createRigidArea(new Dimension(5,0)));
     	Option2.add(Admin);
     	Option2.add(aTable);
     	Option2.add(lblNewLabel2);
@@ -197,6 +275,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	
     	BoxLayout layout3 = new BoxLayout(Option3, BoxLayout.Y_AXIS);
     	Option3.setLayout(layout3);
+    	Option3.add(Box.createRigidArea(new Dimension(5,0)));
     	Option3.add(UserToAdmin);
     	Option3.add(Information);
     	Option3.add(Yes); Option3.add(No);
@@ -209,6 +288,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	
     	BoxLayout layout4 = new BoxLayout(Option4, BoxLayout.Y_AXIS);
     	Option4.setLayout(layout4);
+    	Option4.add(Box.createRigidArea(new Dimension(5,0)));
     	Option4.add(UserInformation);
     	Option4.add(UserEvent);
     	Option4.add(EventTable);
@@ -218,7 +298,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
     	Option4.add(JoinEvent);
     	Option4.add(EventId);
     	Option4.add(LowParticipationEvents);
-    	Option4.add(Refresh);
+    	Option4.add(JoinNewEvent);
     	layeredPane.add(Option4, "name_2074113974014000");
     	
     	
@@ -466,7 +546,7 @@ class solve extends JFrame implements ItemListener, ActionListener {
 						
 					});
 					
-					Refresh.addActionListener(new ActionListener() {
+					JoinNewEvent.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							int sqlCode = 0; // Variable to hold SQLCODE
 							String sqlState = "00000"; // Variable to hold SQLSTATE
@@ -564,6 +644,38 @@ class solve extends JFrame implements ItemListener, ActionListener {
 		// add panel to frame 
 		f.getContentPane().add(p); 
 
+		f.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			    int x=e.getX();
+			    int y=e.getY();
+			    System.out.println(x+","+y);//these co-ords are relative to the component
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		// set the size of frame 
 		f.setSize(450, 400); 
 
@@ -594,6 +706,18 @@ class solve extends JFrame implements ItemListener, ActionListener {
 		return EventQuery;
 		
 	}
+	
+	
+	public static Boolean changeAuth(int x) {
+		if (x == 1) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
