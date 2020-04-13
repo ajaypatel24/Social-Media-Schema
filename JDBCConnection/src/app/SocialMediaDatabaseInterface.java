@@ -646,6 +646,7 @@ class SocialMediaDatabaseInterface extends JFrame implements ItemListener, Actio
 						int sqlCode = 0; // Variable to hold SQLCODE
 						String sqlState = "00000"; // Variable to hold SQLSTATE
 						public void actionPerformed(ActionEvent e) {
+							TextLabel.setText("");
 							Post.removeAllItems();
 							String post;
 							try {
