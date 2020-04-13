@@ -1,0 +1,1 @@
+We decided to implement a Java applet GUI instead of a simple terminal application for creativity points.
