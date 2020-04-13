@@ -205,6 +205,12 @@ class SocialMediaDatabaseInterface extends JFrame implements ItemListener, Actio
 		JLabel NumberParticipants = new JLabel("Number of Participants");
 		JLabel EventId = new JLabel("Event ID");
 
+		// Option 5
+		JTextField UserName = new JTextField(20);
+		JComboBox<String> Post = new JComboBox<String>();
+		JButton Find = new JButton("Find");
+		JLabel TextLabel = new JLabel("");
+		
 		JPanel Home = new JPanel();
 		Home.add(Group);
 		Home.add(Group2);
@@ -265,6 +271,17 @@ class SocialMediaDatabaseInterface extends JFrame implements ItemListener, Actio
 		Option4.add(LowParticipationEvents);
 		Option4.add(JoinNewEvent);
 		layeredPane.add(Option4, "name_2074113974014000");
+		
+		JPanel Option5 = new JPanel();
+		
+		BoxLayout layout5 = new BoxLayout(Option5, BoxLayout.Y_AXIS);
+		Option5.setLayout(layout5);
+		Option5.add(UserName);
+		Option5.add(Find);
+		Option5.add(Post);
+		Option5.add(TextLabel);
+		
+		layeredPane.add(Option5, "name_opt5");
 
 		String s1[] = { "Home", "Option 1", "Option 2", "Option 3", "Option 4", "Quit" };
 		JLabel OptionSelected = new JLabel("");
@@ -617,6 +634,57 @@ class SocialMediaDatabaseInterface extends JFrame implements ItemListener, Actio
 					layeredPane.repaint();
 					layeredPane.revalidate();
 				}
+				
+				if (opt.contentEquals("Option 5")) {
+					
+					Find.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							String post;
+							try {
+							String User = UserName.getText();
+							String PostQuery = UserPostQuery(User);
+							java.sql.ResultSet rs = statement.executeQuery(PostQuery);
+							
+							while (rs.next()) {
+								post = rs.getString("pid");
+								Post.addItem(post);
+							}
+							}
+							catch (SQLException e6) {
+								System.out.println(e6.getErrorCode());
+							}
+							
+							
+							
+						}
+					});
+					Post.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							try {
+							String t ="";
+							String s = (String) Post.getSelectedItem();
+							String UserText = UserPostTextQuery(s);
+							
+							java.sql.ResultSet rs = statement.executeQuery(UserText);
+							
+							while (rs.next()) {
+								t = rs.getString("text");
+							}
+							TextLabel.setText(t);
+							
+							
+							}
+							catch (SQLException e7) {
+								System.out.println(e7.getErrorCode());
+							}
+							
+						}
+					});
+					layeredPane.removeAll();
+					layeredPane.add(Option5);
+					layeredPane.repaint();
+					layeredPane.revalidate();
+				}
 
 				if (opt.contentEquals("Quit")) {
 
@@ -707,14 +775,20 @@ class SocialMediaDatabaseInterface extends JFrame implements ItemListener, Actio
 		String AdminQuery = "SELECT DISTINCT first_name FROM accountuser NATURAL JOIN manages";
 		return AdminQuery;
 	}
-
-	public static Boolean changeAuth(int x) {
-		if (x == 1) {
-			return true;
-		} else {
-			return false;
-		}
+	
+	public static String UserPostQuery(String User) {
+		String UserPostQuery = "SELECT pid FROM post NATURAL JOIN accountuser WHERE first_name = "
+							+ "'" + User + "'"
+							+ " ORDER BY pid";
+		System.out.println(UserPostQuery);
+		return UserPostQuery;
 	}
+	public static String UserPostTextQuery(String pid) {
+		String UserPostText = "SELECT text FROM post WHERE pid = " 
+								+ pid;
+		return UserPostText;
+	}
+
 
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
