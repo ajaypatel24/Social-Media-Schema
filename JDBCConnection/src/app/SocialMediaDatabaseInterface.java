@@ -206,9 +206,11 @@ class SocialMediaDatabaseInterface extends JFrame implements ItemListener, Actio
 		JLabel EventId = new JLabel("Event ID");
 
 		// Option 5
+		JLabel Info5 = new JLabel("Enter First Name");
 		JTextField UserName = new JTextField(20);
 		JComboBox<String> Post = new JComboBox<String>();
 		JButton Find = new JButton("Find");
+		JButton SeePost = new JButton("See Post");
 		JLabel TextLabel = new JLabel("");
 		
 		JPanel Home = new JPanel();
@@ -276,14 +278,16 @@ class SocialMediaDatabaseInterface extends JFrame implements ItemListener, Actio
 		
 		BoxLayout layout5 = new BoxLayout(Option5, BoxLayout.Y_AXIS);
 		Option5.setLayout(layout5);
+		Option5.add(Info5);
 		Option5.add(UserName);
 		Option5.add(Find);
 		Option5.add(Post);
+		Option5.add(SeePost);
 		Option5.add(TextLabel);
 		
 		layeredPane.add(Option5, "name_opt5");
 
-		String s1[] = { "Home", "Option 1", "Option 2", "Option 3", "Option 4", "Quit" };
+		String s1[] = { "Home", "Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Quit" };
 		JLabel OptionSelected = new JLabel("");
 		JComboBox<?> comboBox = new JComboBox<Object>(s1);
 		JLabel status = new JLabel("");
@@ -636,29 +640,59 @@ class SocialMediaDatabaseInterface extends JFrame implements ItemListener, Actio
 				}
 				
 				if (opt.contentEquals("Option 5")) {
+					OptionSelected.setText("View all posts of a given user");
 					
 					Find.addActionListener(new ActionListener() {
+						int sqlCode = 0; // Variable to hold SQLCODE
+						String sqlState = "00000"; // Variable to hold SQLSTATE
 						public void actionPerformed(ActionEvent e) {
+							Post.removeAllItems();
 							String post;
 							try {
 							String User = UserName.getText();
-							String PostQuery = UserPostQuery(User);
-							java.sql.ResultSet rs = statement.executeQuery(PostQuery);
 							
-							while (rs.next()) {
-								post = rs.getString("pid");
-								Post.addItem(post);
+							String ValidUser = ValidUserQuery(UserName.getText());
+							java.sql.ResultSet VUser = statement.executeQuery(ValidUser);
+							while (VUser.next()) {
+								ValidUser = VUser.getString("count");
 							}
+
+							if (Integer.parseInt(ValidUser) == 0) {
+								Post.setEnabled(false);
+								status.setForeground(Color.red);
+								status.setText("User does not exist");
+							} else {
+								Post.setEnabled(true);
+								status.setText("");
+							}
+							
+							String PostQuery = UserPostQuery(User);
+							System.out.println(PostQuery);
+							java.sql.ResultSet set = statement.executeQuery(PostQuery);
+							
+							
+							
+							java.sql.ResultSet EventList = statement.executeQuery(PostQuery);
+							Post.removeAllItems();
+							while (EventList.next()) {
+								post = EventList.getString("pid");
+								Post.addItem(post);
+
+							}
+							
 							}
 							catch (SQLException e6) {
-								System.out.println(e6.getErrorCode());
+								sqlCode = e6.getErrorCode();
+								sqlState = e6.getSQLState();
+								System.out.println("Code: " + e6.getMessage() + "  sqlState: " + sqlState);
+								
 							}
 							
 							
 							
 						}
 					});
-					Post.addActionListener(new ActionListener() {
+					SeePost.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							try {
 							String t ="";
@@ -680,6 +714,7 @@ class SocialMediaDatabaseInterface extends JFrame implements ItemListener, Actio
 							
 						}
 					});
+					
 					layeredPane.removeAll();
 					layeredPane.add(Option5);
 					layeredPane.repaint();
@@ -778,8 +813,8 @@ class SocialMediaDatabaseInterface extends JFrame implements ItemListener, Actio
 	
 	public static String UserPostQuery(String User) {
 		String UserPostQuery = "SELECT pid FROM post NATURAL JOIN accountuser WHERE first_name = "
-							+ "'" + User + "'"
-							+ " ORDER BY pid";
+							+ "'" + User + "'";
+							
 		System.out.println(UserPostQuery);
 		return UserPostQuery;
 	}
