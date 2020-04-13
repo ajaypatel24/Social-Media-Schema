@@ -1,19 +1,8 @@
--- FUNCTION: cs421g38.getquery(character varying, integer, character varying)
+CREATE TYPE soh AS (first_name varchar(30), page_id integer, date_string varchar(39));
 
--- DROP FUNCTION cs421g38.getquery(character varying, integer, character varying);
+CREATE OR REPLACE FUNCTION getquery(name varchar(30), id integer, date_before varchar(30)) RETURNS SETOF soh AS $$
 
-CREATE OR REPLACE FUNCTION cs421g38.getquery(
-	name character varying,
-	id integer,
-	date_before character varying)
-    RETURNS SETOF soh 
-    LANGUAGE 'plpgsql'
-    COST 100
-    VOLATILE 
-    ROWS 1000
-AS $BODY$
-
-DECLARE 
+DECLARE
   query_cursor CURSOR FOR SELECT first_name, page_id, date_string FROM interaction NATURAL JOIN accountuser NATURAL JOIN user_like WHERE first_name = name AND page_id = id AND date_string < date_before ORDER BY first_name;
   rec soh;
 BEGIN
@@ -26,7 +15,4 @@ BEGIN
   CLOSE query_cursor;
   RETURN;
 END;
-$BODY$;
-
-ALTER FUNCTION cs421g38.getquery(character varying, integer, character varying)
-    OWNER TO cs421g38;
+$$ LANGUAGE plpgsql;
